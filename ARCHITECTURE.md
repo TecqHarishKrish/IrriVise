@@ -1,0 +1,7 @@
+# Architecture
+
+The React/TypeScript/Vite client loads actual API data through TanStack Query. FastAPI validates project, scenario, and simulation requests. SQLite holds projects, scenarios, jobs, and run metadata. A separate Python process atomically claims queued jobs, performs simulations, and writes trace JSON under `artifacts/runs/`. The API reads only saved metadata and artifacts. Development servers bind to localhost.
+
+The scientific core in `packages/irrivise_core` has no API dependency. `simulate` chooses observation and irrigation using the estimated twin and a past-based forecast; the hidden reference state advances only after action selection. The ordinary daily API omits hidden reference state. A separate post-run `/evaluation` endpoint includes it, and the frontend labels it explicitly. This is a code-level separation inside a single Python process, not an independent security boundary. AquaCrop-OSPy evaluates complete precomputed schedules in the worker. Gymnasium and Stable-Baselines3 train PPO in a separate worker job and write verified checkpoints and manifests.
+
+Jobs transition `queued → running → succeeded/failed/cancelled`, and a worker restart marks abandoned running jobs `interrupted`. There is one worker process by default. PPO jobs report actual step progress. The job queue does not yet support leases, heartbeats, or SSE. The database schema is initialized on connect; SQLAlchemy and Alembic migration support remain pending.
