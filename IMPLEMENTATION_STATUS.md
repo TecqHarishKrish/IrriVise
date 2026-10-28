@@ -10,7 +10,7 @@ Kept and extended: FAO-56 Penman–Monteith ETo and the NASA POWER parsing appro
 
 ## Environment
 
-Linux x86-64, 4 vCPU, 15 GB RAM, Python 3.12.13 (venv), Node 22.22 / npm 10.9. PyPI and npm reachable; **NASA POWER and download.pytorch.org blocked by the sandbox egress policy**; **`git push` to GitHub refused (403: Claude GitHub App has no access to the repository)**.
+Linux x86-64, 4 vCPU, 15 GB RAM, Python 3.12.3 (venv), Node 22.22 / npm 10.9. PyPI and npm reachable; **NASA POWER and download.pytorch.org blocked by the sandbox egress policy**; **`git push` to GitHub refused (403: Claude GitHub App has no access to the repository)**.
 
 ## Phases
 

@@ -18,3 +18,4 @@ apps/web/.env
 # Downloaded / derived third-party data
 data/raw/
 data/processed/
+*.tsbuildinfo

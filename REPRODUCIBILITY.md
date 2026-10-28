@@ -5,7 +5,7 @@
 | Item | Value |
 |---|---|
 | OS / CPU / RAM | Linux 6.18 x86-64, 4 vCPU, 15 GB (cloud container) |
-| Python | 3.12.13; pins in `services/api/requirements.txt` (torch 2.5.1, stable-baselines3 2.4.1, gymnasium 1.0.0, numpy 1.26.4, pandas 2.2.3, aquacrop 3.1.0, fastapi 0.115.12, sqlalchemy 2.0.41, alembic 1.15.2) |
+| Python | 3.12.3; pins in `services/api/requirements.txt` (torch 2.5.1, stable-baselines3 2.4.1, gymnasium 1.0.0, numpy 1.26.4, pandas 2.2.3, aquacrop 3.1.0, fastapi 0.115.12, sqlalchemy 2.0.41, alembic 1.15.2) |
 | Node | 22.22; exact versions in `apps/web/package.json` + `package-lock.json` |
 | Code | commits `4f3c9c8` (+ the uncommitted R-daily/narrative fix later committed as `6d1327e`; manifests record `+dirty`) |
 | Dataset | `data/sample/synthetic_weather_tn_v1.csv`, SHA-256 `bb092b66fb839597bcb7ec436f394e4321d3a6336ab632cd647cb9510e261195` (synthetic, seed 42) |

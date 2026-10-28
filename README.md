@@ -15,7 +15,7 @@ IrriVise is a locally runnable research platform for **CARAT — Counterfactual 
 
 ## Requirements
 
-* Python **3.12** (3.11 should work; tested on 3.12.13, Linux x86-64)
+* Python **3.12** (3.11 should work; tested on 3.12.3, Linux x86-64)
 * Node.js **20+** (tested on 22.22) with npm
 * ~3 GB disk for PyTorch (the CPU wheel is used when the PyTorch index is reachable)
 
