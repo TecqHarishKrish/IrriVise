@@ -61,7 +61,7 @@ function Results({ id }: { id: string }) {
     return { method: t.code, label: t.label, mean: s?.mean ?? null, err: s?.ci95 && s.mean !== null ? [s.mean - s.ci95[0], s.ci95[1] - s.mean] : [0, 0], n: s?.n ?? 0 };
   });
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex min-w-0 flex-col gap-4">
       <Card>
         <CardHeader>
           <CardTitle>What did the data show?</CardTitle>
@@ -219,8 +219,8 @@ export default function Experiments() {
   return (
     <>
       <PageHeader title="Experiment Benchmark" description="Matched comparisons: every method sees identical seasons, seeds, hidden farm draws, observation budgets and sensor noise. Results can show that CARAT does not help." />
-      <div className="grid gap-6 xl:grid-cols-[400px_minmax(0,1fr)]">
-        <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[400px_minmax(0,1fr)]">
+        <div className="flex min-w-0 flex-col gap-4">
           <Card>
             <CardHeader><CardTitle>Design an experiment</CardTitle><CardDescription>{split === 'test' ? 'Held-out test' : 'Validation'} seasons: {evalSeasons.join(', ') || '—'}</CardDescription></CardHeader>
             <CardContent>

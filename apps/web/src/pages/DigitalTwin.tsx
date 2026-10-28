@@ -88,7 +88,7 @@ export default function DigitalTwin() {
       )}
       {!runId ? <EmptyState icon={Activity} title="No run to inspect" description="Run a simulation first; the twin trace is saved with every run." action={<Button asChild><a href="/simulation">Open simulator</a></Button>} /> :
         daily.isError ? <ErrorPanel error={daily.error} retry={() => daily.refetch()} /> : daily.isLoading || !row ? <LoadingBlock rows={4} /> : (
-          <div className="flex flex-col gap-4">
+          <div className="flex min-w-0 flex-col gap-4">
             <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
               <Kpi label="Twin RMSE" value={evaluationMode ? fmt(run.data?.summary.twin_rmse_mm, 1) : '—'} unit="mm" provenance="truth" hint={evaluationMode ? `${fmt(run.data?.summary.twin_rmse_m3m3, 4)} m³/m³` : 'enable evaluation mode'} />
               <Kpi label="Twin bias" value={evaluationMode ? fmt(run.data?.summary.twin_bias_mm, 1) : '—'} unit="mm" provenance="truth" />

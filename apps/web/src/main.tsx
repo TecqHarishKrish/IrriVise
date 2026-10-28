@@ -21,7 +21,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider delayDuration={200}>
-        <BrowserRouter>
+        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <WorkspaceProvider>
             <App />
           </WorkspaceProvider>

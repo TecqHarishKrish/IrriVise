@@ -59,7 +59,7 @@ export default function Analytics() {
         </Select>
         <span className="text-sm text-muted-foreground">{filtered.length} run(s)</span>
       </div>
-      <div className="grid gap-4 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ChartFrame name="irrigation-vs-yield" title="Irrigation vs yield proxy (each run)" description="Trade-off between applied water and FAO-33 yield proxy." provenance={['simulated', 'proxy']}
           rows={points} columns={[{ key: 'code', label: 'Method' }, { key: 'season', label: 'Season' }, { key: 'seed', label: 'Seed' }, { key: 'irrigation', label: 'Irrigation (mm)' }, { key: 'yield', label: 'Yield proxy (t/ha)' }, { key: 'aquacrop', label: 'AquaCrop (t/ha)' }]} height={320}>
           <ResponsiveContainer>

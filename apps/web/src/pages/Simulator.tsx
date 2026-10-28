@@ -91,8 +91,8 @@ export default function Simulator() {
   return (
     <>
       <PageHeader title="Irrigation Simulator" description="Configure a controller, run a season in the worker, then step through the saved daily record. All charts read the stored trace." />
-      <div className="grid gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
-        <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
+        <div className="flex min-w-0 flex-col gap-4">
           <Card>
             <CardHeader><CardTitle>Run configuration</CardTitle><CardDescription>{ws.scenario?.name}</CardDescription></CardHeader>
             <CardContent>

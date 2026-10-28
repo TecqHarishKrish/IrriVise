@@ -59,7 +59,7 @@ export default function SettingsPage() {
   return (
     <>
       <PageHeader title="Settings & Help" description="Diagnostics, environment, units, methodology, glossary and limitations." />
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <Card>
           <CardHeader><CardTitle>Environment diagnostics</CardTitle><CardDescription>Live from the API.</CardDescription></CardHeader>
           <CardContent>

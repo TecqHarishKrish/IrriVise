@@ -92,6 +92,7 @@ def transition(session: Session, job: Job, status: str, phase: str | None = None
         job.finished_at = utcnow()
         if status == "succeeded":
             job.progress = 100.0
+            job.current_step = job.total_steps
     if error:
         job.error = error[:2000]
     add_event(session, job, phase or status, message or status)

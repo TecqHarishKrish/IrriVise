@@ -124,7 +124,7 @@ function Preview({ dataset }: { dataset: Dataset }) {
   const p = preview.data!;
   const v = dataset.validation;
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex min-w-0 flex-col gap-4">
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <Card className="p-4"><p className="text-xs text-muted-foreground">Coverage</p><p className="tabular font-semibold">{dataset.start} → {dataset.end}</p><p className="text-xs text-muted-foreground">{dataset.rows.toLocaleString()} valid days</p></Card>
         <Card className="p-4"><p className="text-xs text-muted-foreground">Missingness</p><p className="tabular font-semibold">{Object.entries(v.missingness_pct ?? {}).map(([k, x]) => `${k} ${x}%`).join(' · ') || '—'}</p><p className="text-xs text-muted-foreground">{v.quarantined_count ?? 0} quarantined · {v.missing_dates ?? 0} absent dates</p></Card>
@@ -186,7 +186,7 @@ export default function DataStudio() {
     <>
       <PageHeader title="Weather & Data Studio" description="Weather datasets with validation reports, provenance, checksums and whole-season chronological splits." />
       {datasets.isError && <ErrorPanel error={datasets.error} retry={() => datasets.refetch()} />}
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
         <div className="flex min-w-0 flex-col gap-4">
           <Card>
             <CardHeader><CardTitle>Datasets</CardTitle></CardHeader>
@@ -209,7 +209,7 @@ export default function DataStudio() {
           </Card>
           {dataset && <Preview dataset={dataset} />}
         </div>
-        <div className="flex flex-col gap-4"><ImportCard /><NasaCard /></div>
+        <div className="flex min-w-0 flex-col gap-4"><ImportCard /><NasaCard /></div>
       </div>
     </>
   );

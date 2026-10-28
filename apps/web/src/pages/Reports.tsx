@@ -51,7 +51,7 @@ export default function Reports() {
   return (
     <>
       <PageHeader title="Report & Export Center" description="Exports are generated from saved artifacts after re-verifying their SHA-256 hashes, so downloaded numbers reconcile with what the UI shows." />
-      <div className="grid gap-6 xl:grid-cols-[420px_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[420px_minmax(0,1fr)]">
         <Card>
           <CardHeader><CardTitle>Create an export</CardTitle><CardDescription>Manifests include seeds, configuration hash, dataset checksum, model checksum, code revision and package versions.</CardDescription></CardHeader>
           <CardContent className="flex flex-col gap-3">

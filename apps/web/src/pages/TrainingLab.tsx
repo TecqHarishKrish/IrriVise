@@ -63,7 +63,7 @@ function ModelDetail({ id }: { id: string }) {
   const m = model.data!;
   const hist = m.manifest?.history ?? [];
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex min-w-0 flex-col gap-4">
       <dl className="grid grid-cols-2 gap-3 text-sm md:grid-cols-4">
         <div><dt className="text-xs text-muted-foreground">Preset · seed</dt><dd>{m.preset} · {m.seed}</dd></div>
         <div><dt className="text-xs text-muted-foreground">Timesteps</dt><dd className="tabular">{m.actual_timesteps.toLocaleString()} ({m.manifest?.stop_reason})</dd></div>
@@ -142,7 +142,7 @@ export default function TrainingLab() {
   return (
     <>
       <PageHeader title="Model Training Lab" description={<>Train a <Term id="ppo">PPO</Term> irrigation policy on training seasons; validation seasons select the checkpoint; test seasons stay untouched.</>} />
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <Card>
           <CardHeader><CardTitle className="flex items-center gap-2"><Cpu className="size-4" aria-hidden />New training job</CardTitle><CardDescription>Runs in the worker (max one training job at a time). Never unbounded.</CardDescription></CardHeader>
           <CardContent>
@@ -194,7 +194,7 @@ export default function TrainingLab() {
             </form>
           </CardContent>
         </Card>
-        <div className="flex flex-col gap-4">
+        <div className="flex min-w-0 flex-col gap-4">
           {activeJob ? (
             <>
               <JobCard jobId={activeJob} title="PPO training" />

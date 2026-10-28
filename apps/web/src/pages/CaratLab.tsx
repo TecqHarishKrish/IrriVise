@@ -59,7 +59,7 @@ function DecisionDetail({ trace, truth }: { trace: DecisionTrace; truth?: { true
   const states = (a?.plausible_states ?? []).map((s) => ({ storage: s.storage_mm, best: s.best_action_mm, weight: s.weight, theta: s.theta_m3m3 }));
   const hyp = ((a?.diagnostics?.hypothetical_regret_after as number[] | undefined) ?? []).map((v, i) => ({ i: i + 1, regret_after: v }));
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex min-w-0 flex-col gap-4">
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
         <Kpi label="Estimated soil water" value={fmt(trace.initial_belief.mean_storage_mm, 1)} unit="mm" provenance="estimated" hint={`± ${fmt(trace.initial_belief.std_storage_mm, 1)} mm`} />
         <Kpi label={<Term id="regret">Est. regret</Term>} value={a ? fmt(a.regret_before, 4) : '—'} provenance="model" />
@@ -99,7 +99,7 @@ function DecisionDetail({ trace, truth }: { trace: DecisionTrace; truth?: { true
         </TabsContent>
         <TabsContent value="states">
           {!states.length ? <p className="text-sm text-muted-foreground">Plausible-state detail is stored for single runs (not for bulk experiment cells).</p> : (
-            <div className="grid gap-4 xl:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               <ChartFrame name={`states-day-${trace.day}`} title="Plausible states and their best action" description="Each dot is one ensemble member (weight shown in table view)." provenance={['estimated', 'model']}
                 rows={states} columns={[{ key: 'storage', label: 'Storage (mm)' }, { key: 'theta', label: 'θ (m³/m³)' }, { key: 'best', label: 'Best action (mm)' }, { key: 'weight', label: 'Weight' }]} height={300}>
                 <ResponsiveContainer>
@@ -118,7 +118,7 @@ function DecisionDetail({ trace, truth }: { trace: DecisionTrace; truth?: { true
         </TabsContent>
         <TabsContent value="voi">
           {!a ? null : (
-            <div className="grid gap-4 xl:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               <Card className="p-4">
                 <dl className="grid grid-cols-2 gap-2 text-sm">
                   <dt className="text-muted-foreground">Regret before reading</dt><dd className="tabular">{a.regret_before.toFixed(5)}</dd>
@@ -210,8 +210,8 @@ export default function CaratLab() {
       {!runId ? <EmptyState icon={FlaskConical} title="No run to replay" description="Run full CARAT (needs a PPO model) or the CARAT planner (no PPO needed) from the simulator."
         action={<><Button asChild><Link to="/simulation?start=lookahead_carat">Run CARAT planner</Link></Button><Button variant="outline" asChild><Link to="/training">Train PPO</Link></Button></>} /> :
         daily.isError ? <ErrorPanel error={daily.error} retry={() => daily.refetch()} /> : daily.isLoading || !s ? <LoadingBlock rows={4} /> : (
-          <div className="flex flex-col gap-4">
-            {!run.data!.method.includes('carat') && <Notice>This run uses observation policy “{run.data!.method}”. Regret is logged as a diagnostic; VOI-driven decisions only occur in CARAT runs.</Notice>}
+          <div className="flex min-w-0 flex-col gap-4">
+            {!run.data!.method.includes('carat') && <Notice>This run uses {run.data!.method_label} ({run.data!.method_code}), not CARAT readings. Regret is still logged as a diagnostic; VOI-driven observe/skip decisions only occur in CARAT runs.</Notice>}
             <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
               <Kpi label="Method" value={run.data!.method_code} hint={run.data!.method_label} />
               <Kpi label="Readings used" value={String(s.observation_count)} unit={`of ${s.observation_count + s.observations_remaining}`} provenance="simulated" />
