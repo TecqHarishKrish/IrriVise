@@ -9,6 +9,7 @@ summary.json, manifest.json); earlier outputs are never overwritten.
 """
 import argparse
 import json
+from pathlib import Path
 from datetime import datetime, timezone
 
 import yaml
@@ -27,8 +28,8 @@ from irrivise_core.util.repro import code_revision, package_versions, sha256_fil
 MODELS = ROOT / "artifacts" / "models"
 
 
-def latest_model() -> str | None:
-    manifests = sorted(MODELS.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+def latest_model(models: Path = MODELS) -> str | None:
+    manifests = sorted(models.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
     return manifests[0].stem if manifests else None
 
 
@@ -36,7 +37,10 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", required=True)
     parser.add_argument("--model-id")
+    parser.add_argument("--model-root", default="artifacts/models", help="directory holding <id>.zip/<id>.json")
+    parser.add_argument("--no-aquacrop", action="store_true", help="skip AquaCrop even if the config enables it")
     args = parser.parse_args()
+    models = (ROOT / args.model_root).resolve()
     spec = yaml.safe_load((ROOT / args.config).read_text())
     dataset = ROOT / spec.pop("dataset", "data/sample/synthetic_weather_tn_v1.csv")
     scenario = default_scenario(**spec.pop("scenario", {}))
@@ -48,13 +52,17 @@ def main() -> None:
     evaluation = [s for s in seasons if s.season_id in split.ids(config.split)]
     factory, model_manifest = None, None
     if any(METHODS[m].needs_model for m in config.methods):
-        model_id = args.model_id or latest_model()
+        model_id = args.model_id or latest_model(models)
         if not model_id:
             raise SystemExit("PPO methods selected but no model found: run scripts/train_ppo.py first")
-        model, model_manifest = load_verified(MODELS, model_id)
+        model, model_manifest = load_verified(models, model_id)
         factory = lambda cfg: PPOPolicy(model, model_manifest, cfg)  # noqa: E731
     print(f"{config.name}: {len(config.methods)} methods × {config.cells(evaluation)} cells on {config.split} seasons {[s.season_id for s in evaluation]}")
-    summary = run_experiment(config, scenario, evaluation, forecaster, factory,
+    aquacrop_fn = None
+    if config.aquacrop and not args.no_aquacrop:
+        from irrivise_core.crops.aquacrop_adapter import evaluate_schedule
+        aquacrop_fn = lambda season, schedule: evaluate_schedule(frame, season.start, schedule)  # noqa: E731
+    summary = run_experiment(config, scenario, evaluation, forecaster, factory, aquacrop_fn,
                              progress=lambda d, n, msg: print(f"[{d}/{n}] {msg}") if d % 10 == 0 or d == n else None)
     out = ROOT / "artifacts" / "experiments" / f"cli-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}"
     out.mkdir(parents=True, exist_ok=False)

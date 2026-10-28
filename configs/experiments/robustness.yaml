@@ -8,5 +8,8 @@ seeds: [1, 2, 3]
 observation_budgets: [5, 10, 20, 40]
 sensor_noise_m3m3: [0.01, 0.02, 0.04]
 sensor_mode: nominal
+uncertainty_threshold: 0.06   # tuned on validation seasons
 aquacrop: false
+# CARAT observation cost tuned on validation seasons
+scenario: {carat: {observation_cost: 0.0}}
 max_runs: 3000

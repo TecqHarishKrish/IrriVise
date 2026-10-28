@@ -1,42 +1,76 @@
-# Implementation status — 2026-10-14
+# Implementation status — 2026-10-28
 
-This is a verified offline prototype. It does **not** satisfy the full master specification.
+Status values: **DONE** (implemented and verified by the commands below), **PARTIAL** (works, with stated gaps), **BLOCKED** (could not be done in this environment).
 
-| Phase | Status | Evidence and remaining work |
+## Starting point (audit)
+
+The repository previously held a compact prototype: a 147-line single-file React UI, raw-`sqlite3` storage with ad-hoc column migrations, a single-process worker, a fixed-root water balance, a one-step CARAT decision, a 7-feature PPO environment, an AquaCrop schedule adapter and a NASA POWER parser. It also **required Supabase login** and shipped a **Groq (commercial LLM) analyst**, both conflicting with the specification (no mandatory auth provider, no commercial LLM, no paid/cloud services). There were no SQLAlchemy/Alembic, SSE, experiments, season splits, risk manager or PPO↔CARAT linkage.
+
+Kept and extended: FAO-56 Penman–Monteith ETo and the NASA POWER parsing approach, the AquaCrop schedule-replay design, the hidden-reference / twin separation idea, the crop/soil defaults direction and the visual palette. Replaced: storage, worker, UI shell, science modules. Removed: Supabase auth and the Groq analyst (local single-user mode instead; deterministic, trace-generated explanations instead of an LLM).
+
+## Environment
+
+Linux x86-64, 4 vCPU, 15 GB RAM, Python 3.12.13 (venv), Node 22.22 / npm 10.9. PyPI and npm reachable; **NASA POWER and download.pytorch.org blocked by the sandbox egress policy**; **`git push` to GitHub refused (403: Claude GitHub App has no access to the repository)**.
+
+## Phases
+
+| Phase | Status | Evidence / gaps |
 |---|---|---|
-| 0 — Audit/scaffold | Partial | Started from an empty folder. Python 3.12.14 and Node 24.19.0 were found through the bundled runtime. `setup.sh` passed on the populated environment; clean-machine install and Windows startup were not tested. |
-| 1 — Design/routes | Partial | All eleven routes render. A browser journey verified navigation and creation at a narrow viewport. Formal accessibility and multi-viewport tests remain. |
-| 2 — Persistence/API | Partial | SQLite persists projects, scenarios, durable simulation/training jobs and run metadata. Typed FastAPI routes and integration tests pass. SQLAlchemy/Alembic, complete CRUD, SSE, imports and quota controls remain. |
-| 3 — Data/AquaCrop | Partial | Strict synthetic CSV validation and an actual AquaCrop-OSPy 3.1.0 full-season rainfed/scheduled-irrigation test pass. Worker evaluates completed schedules. NASA POWER, historical splits and agronomic calibration remain. |
-| 4 — Fast model | Partial | Mass balance, hidden reference/twin split, past-based forecast, seeded observations and zero-budget tests pass. Root depth and forecast are simplified. |
-| 5 — PPO/worker | Partial | Separate worker runs a real quick PPO job with step progress, cancellation polling, checkpoint hash, save/load and one-step inference. CLI 2,048-step smoke training and UI 256-step job succeeded. No validation selection, multi-seed training, leases or heartbeat. |
-| 6 — CARAT | Partial | Plausible states, estimated regret, hypothetical readings, conditional VOI, correction and hard budgets work. No PPO connection, multi-day rollout or crop-stage risk manager. |
-| 7 — Replay | Partial | Saved daily JSON, twin evaluation view, paginated CARAT trace and actual job states. No pause/step replay control. |
-| 8 — Experiments | Partial | Individual fixed and CARAT runs can use the same scenario/seed/weather. Matched multi-seed benchmark, ablations and confidence intervals are absent. |
-| 9 — Reports | Partial | Latest run JSON export and actual summary table. No printable report or verified chart export. |
-| 10 — Hardening | Partial | `smoke_test.sh` passes; manual browser journey passes. Lint, automated Playwright, clean install, quota/security review and desktop/tablet testing remain. |
-| 11 — Research training | Partial | Quick functional PPO checkpoint exists. No held-out testing, model selection or research-quality claims. |
+| 0 Audit & scaffolding | DONE | Monorepo layout (`apps/web`, `services/api`, `packages/irrivise_core`, `configs`, `scripts`, `docs/results`); pinned `requirements.txt`, npm lockfile; `setup.sh`, `dev.sh` (port checks, clean shutdown), `smoke_test.sh`, `e2e_stack.sh`, Makefile. `.ps1` scripts written but **not tested** (no Windows). |
+| 1 Design system & routes | DONE | 11 routes + 404; collapsible sidebar, breadcrumbs, project/scenario selector, theme toggle, mobile drawer, onboarding, skip link, provenance badges, glossary tooltips, chart table/CSV/SVG alternatives. Vitest route tests (13); Playwright mobile (390 px), keyboard and theme tests; no horizontal overflow at 390/768 px on checked pages. No automated axe/WCAG audit was run. |
+| 2 Persistence & APIs | DONE | SQLAlchemy 2 models, Alembic `0001` auto-applied on API/worker start, `/api/v1` routes with error schema and OpenAPI; CRUD survives engine restart (test). |
+| 3 Data & crop simulator | PARTIAL | Synthetic 20-season fixture (checksum-verified), CSV import with validation/quarantine, chronological season splits, NASA POWER downloader with cache/retries/fill-value handling (tested with mocked HTTP incl. 503 retry, offline failure, cache hit). AquaCrop-OSPy 3.1.0 full-season rainfed and scheduled runs tested. **Live NASA POWER fetch BLOCKED** (egress denied). AquaCrop default parameters are uncalibrated and differ structurally from the surrogate. |
+| 4 Fast water balance | DONE | Mass-balance residual ≤ 1e−6 mm enforced; root growth, CN runoff, saturation excess, drainage; hidden farm vs twin; past-only forecasts; isolation and chronology tests. |
+| 5 PPO & worker | DONE | Gymnasium env passes `check_env`; quick and standard presets trained; validation-based selection; SHA-256-verified load; tamper/incompatibility rejection; worker with spawned children, heartbeats, cancellation (verified live), SIGKILL recovery (job → interrupted, verified live), concurrency caps, SSE + polling. |
+| 6 CARAT | DONE | Ensemble regret, preposterior VOI (reweight & Kalman modes), shadow price, observe/skip rule, Kalman correction with gating, risk manager (hard + soft). Tests: same-action ⇒ zero regret & skip; disagreement ⇒ positive VOI; zero budget; cost blocks; soft risk on/off; degenerate variance. |
+| 7 Simulation & replay | DONE | UI-triggered runs → saved daily/decision/truth artifacts → charts, day stepper, CARAT replay with plain explanation from trace fields, evaluation-only truth toggle. |
+| 8 Experiments & ablations | DONE | Matched experiments (B0–B5, A5, A6, P, planner, daily reference), seeds, budget/noise sweeps, sensor-fault modes, paired bootstrap CIs, Wilcoxon, generated narrative with negative-result flags, failed runs listed. CLI re-run reproduces API results exactly. |
+| 9 Analytics & reporting | DONE | Insights page from saved summaries, exports (ZIP/CSV/JSON/HTML with SVG charts) with hash verification and refusal on tampering (test). No server-side PNG; charts export SVG/CSV from the browser. No PDF generator (browser print). |
+| 10 Hardening | PARTIAL | Upload type/size limits, path-traversal defence, idempotency + duplicate rejection, queue cap, localhost binding, CORS restricted. Not done: authentication for non-local deployment, storage quota enforcement (quota is reported, not enforced), CPU profiling, clean-machine install test. |
+| 11 Research training | PARTIAL | Standard preset (150k × 3 seeds) trained and evaluated on held-out test seasons; validation-only tuning of observation parameters. Not done: research preset (500k × 5 seeds), Optuna PPO hyperparameter search (dependency installed, unused), NASA POWER historical seasons, AquaCrop-in-the-loop evaluation of all methods beyond the main benchmark. |
 
-## Verification log
+## Verification log (commands actually run in this session)
 
-- `./scripts/setup.sh` with bundled Python/Node paths: **passed** on this populated environment; pip requirements already installed and pnpm lockfile up to date.
-- `./scripts/smoke_test.sh`: **12 passed, 1 Starlette deprecation warning**; TypeScript typecheck and Vite production build passed (1,635 modules transformed).
-- `python scripts/train_ppo.py --preset cpu_quick --dataset sample --seed 42 --timesteps 2048`: **passed** with 2,048 actual steps, checkpoint save/load and one-step inference; no quality score was measured.
-- Live localhost browser: created a project/scenario, queued fixed and CARAT simulations, observed worker completion, queued a 256-step PPO job and saw its checkpoint after success. The command center displayed AquaCrop-simulated dry yield from a saved 150-day run.
-- AquaCrop integration test: rainfed and scheduled maize runs both returned finite harvest results; scheduled irrigation was positive and rainfed irrigation was zero.
-- Ordinary `/daily` API excludes hidden reference storage; `/evaluation` exposes it only in post-run evaluation. The isolation is within application code, not authentication/security enforcement.
+| Command | Result |
+|---|---|
+| `.venv/bin/python -m pytest -q` | **71 passed** (56 science, 13 API/worker, 2 CLI integration) |
+| `cd apps/web && npm run lint` | 0 problems |
+| `npm run typecheck` | 0 errors |
+| `npx vitest run` | **22 passed** |
+| `npm run build` | success (Plotly in a separate lazy chunk, 1.39 MB / 474 kB gzip) |
+| `npx playwright test` | **3 passed**: full 10-step offline journey, mobile nav + theme, keyboard navigation |
+| `./scripts/smoke_test.sh` | passed |
+| `python scripts/sample_data.py --check` | checksum match |
+| Live stack (`dev.sh`): API + worker + Vite | onboarding → auto fixed run; all routes rendered with no console errors (screenshots at 1440/768/390 px) |
+| Live worker: cancel a running 40k-step training | cancelled at step 1536 |
+| Live worker: SIGKILL supervisor during training | job marked `interrupted`, no orphan process; restarted worker healthy |
+| Standard PPO training via UI/API worker | 3 × 150k steps, ≈ 5 min/seed; selected seed 44, validation reward 4.012 |
+| `scripts/tune_validation.py` | validation-only selection: CARAT obs cost 0.0, B5 threshold 0.06 |
+| Main benchmark (API) + CLI re-run | 220 runs, 0 failed, 0 hard-constraint violations; CLI reproduces all means exactly |
+| Robustness sweep | 576 runs, 0 failed |
+| Sensor faults (missing/biased/stuck) | 3 × 48 runs, 0 failed |
 
-## Actual synthetic demonstration outcomes
+## Experimental findings (simulated; synthetic weather; 4 held-out seasons)
 
-Two 150-day runs used the same sample dataset checksum `4827ab9decbfa9fb97ea83615dc90cda0c01eb0b90aa621d14557f5824d2c783`, scenario, 350 mm budget and seed 42:
+Full numbers and caveats: [REPRODUCIBILITY.md](REPRODUCIBILITY.md#recorded-results-simulated-synthetic-weather) and `docs/results/`.
 
-| Controller | Irrigation | AquaCrop-simulated dry yield | Simulated readings |
-|---|---:|---:|---:|
-| Fixed interval | 350 mm | 14.8696 t/ha | 0 |
-| CARAT prototype | 320 mm | 14.8696 t/ha | 6 |
+* Full CARAT used ≈ 6 of 10 readings and, against matched-budget fixed-interval and random readings with the same PPO checkpoint, achieved higher total reward excluding reading cost (CI excludes 0); yield-proxy differences were inconclusive.
+* Negative results: the CARAT *planner* (lookahead action instead of PPO) beat Full CARAT on yield proxy, stress and objective; the soil-threshold baseline had lower stress; daily readings (140) did not improve PPO's yield proxy over CARAT's ≈ 6 — the PPO policy appears to be the bottleneck.
+* A wet-biased sensor degrades correction-based methods to roughly no-reading PPO; no bias detection exists.
+* The first main-benchmark run had a bug (daily reference capped at 10 readings); it is preserved as `docs/results/main_benchmark_v1_superseded.json` and was re-run after the fix.
 
-These are **one synthetic scenario and one seed**, with no held-out weather, statistical interval or field validation. The equal crop-model yield and 30 mm irrigation difference are descriptive only; they do not establish method superiority.
+These are simulation results on one synthetic climate and one PPO checkpoint; they are not evidence of field performance.
 
-## Highest priority next action
+## Known issues / remaining work
 
-Implement bounded NASA POWER historical weather ingestion and season-level train/validation/test splits, then run matched multi-seed evaluation before tuning or making performance claims.
+1. **Push blocked**: commits exist locally on `claude/irrivise-end-to-end-t9d73t`; GitHub returned 403 (app not installed / not authorised for the repository).
+2. NASA POWER live ingestion untested against the real service (egress blocked); verify with a real download.
+3. Sensor bias detection (e.g. innovation-sequence monitoring) is absent; biased sensors mislead the twin.
+4. PPO is trained without CARAT in the loop and shares one checkpoint across observation policies; joint training or using the CARAT value model as a PPO critic bootstrap are open questions.
+5. AquaCrop evaluation uses default parameters and shows little sensitivity to the schedules tested; calibration against the surrogate (or vice versa) is needed before AquaCrop yields can discriminate methods.
+6. Storage quotas are reported but not enforced; no authentication for non-local deployment.
+7. Research CPU preset and Optuna tuning not run; Windows scripts untested; no automated axe accessibility audit.
+
+## Next priority
+
+Implement sensor-bias detection in the twin (innovation-sequence test that down-weights or rejects persistently biased readings) and re-run the sensor-fault experiment — it is the clearest failure mode found and directly affects CARAT's correction step.
