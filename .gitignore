@@ -1,19 +1,20 @@
+# Python / Node
 .venv/
-node_modules/
-apps/web/node_modules/
-.pnpm-store/
-apps/web/dist/
 __pycache__/
-.pytest_cache/
 *.pyc
+.pytest_cache/
+node_modules/
+apps/web/dist/
+apps/web/test-results/
+apps/web/playwright-report/
+# Local state: database, artifacts, caches, secrets
 *.sqlite3
 *.sqlite3-*
-artifacts/runs/*.json
-artifacts/models/
+artifacts/
+.cache/
 .env
 apps/web/.env
 .DS_Store
-.cache/
+# Downloaded / derived third-party data
 data/raw/
 data/processed/
-data/manifests/nasa-*.json

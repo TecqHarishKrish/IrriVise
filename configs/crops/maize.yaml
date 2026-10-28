@@ -1,0 +1,18 @@
+# Maize (grain) crop profile for the fast water-balance surrogate.
+# Sources: FAO-56 (Allen et al., 1998) Table 11 (stage lengths), Table 12 (Kc),
+# Table 22 (rooting depth, depletion fraction p); FAO-33 (Doorenbos & Kassam, 1979)
+# stage yield-response factors Ky (vegetative 0.4, flowering 1.5, yield formation 0.5).
+# Mapping of FAO-33 stages onto the four FAO-56 stages is an approximation:
+#   initial -> 0.4, development -> 0.4, mid (flowering) -> 1.5, late (yield formation) -> 0.5
+# max_yield_t_ha is only the scale of the uncalibrated yield PROXY; it is not a measured yield.
+name: maize
+stage_lengths_days: [25, 40, 45, 30]
+kc_ini: 0.30
+kc_mid: 1.20
+kc_end: 0.35
+root_min_m: 0.30
+root_max_m: 1.00
+depletion_p: 0.55
+ky_stage: [0.4, 0.4, 1.5, 0.5]
+max_yield_t_ha: 9.0
+source: "FAO-56 Tables 11, 12, 22; FAO-33 Ky; values are generic defaults, not site-calibrated"

@@ -1,0 +1,11 @@
+# CARAT decision layer defaults. Costs are in the same reward units as the RL reward
+# (10 mm of irrigation costs 0.2 * 10/20 = 0.1 reward units). Tune on validation seasons only.
+horizon_days: 5
+discount: 0.97
+hypothetical_samples: 16
+observation_cost: 0.03
+budget_shadow_price: 0.02
+observe_threshold: 0.0
+voi_update: reweight
+regret_tolerance: 1.0e-9
+terminal_depletion_weight: 0.5

@@ -1,0 +1,14 @@
+# Matched baseline comparison on held-out TEST seasons of the synthetic sample dataset.
+# Requires a trained PPO checkpoint for PPO-based methods (scripts/train_ppo.py).
+name: Baselines and CARAT ablations (synthetic sample, test split)
+dataset: data/sample/synthetic_weather_tn_v1.csv
+split: test
+methods: [fixed_schedule, soil_threshold, ppo, ppo_fixed_interval, ppo_random, ppo_uncertainty, ppo_carat_no_risk, ppo_carat_no_correction, carat_full, lookahead_carat]
+reference_method: ppo
+seeds: [1, 2, 3, 4, 5]
+observation_budgets: [10]
+sensor_noise_m3m3: [0.02]
+sensor_mode: nominal
+uncertainty_threshold: 0.08
+aquacrop: false
+max_runs: 2000

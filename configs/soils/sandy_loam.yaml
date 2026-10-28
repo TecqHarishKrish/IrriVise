@@ -1,0 +1,11 @@
+# Sandy loam. theta values within FAO-56 Table 19 ranges (FC 0.18-0.28, WP 0.06-0.16);
+# saturation from typical Rawls et al. (1982) porosity. drainage_tau from AquaCrop's
+# relation tau = 0.0866 * Ksat^0.35 with Ksat ~ 500 mm/day. Curve number for row crops,
+# hydrologic soil group B, good condition (USDA TR-55) reduced for sandy texture.
+name: sandy_loam
+theta_wp: 0.10
+theta_fc: 0.23
+theta_sat: 0.41
+drainage_tau: 0.76
+curve_number: 72
+source: "FAO-56 Table 19 ranges; AquaCrop tau relation; USDA TR-55 CN"

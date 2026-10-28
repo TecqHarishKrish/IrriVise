@@ -1,0 +1,13 @@
+{
+  "file": "data/sample/synthetic_weather_tn_v1.csv",
+  "checksum_sha256": "bb092b66fb839597bcb7ec436f394e4321d3a6336ab632cd647cb9510e261195",
+  "rows": 7305,
+  "start": "2004-01-01",
+  "end": "2023-12-31",
+  "generator": "synthetic-tn-v1",
+  "seed": 42,
+  "latitude": 10.79,
+  "longitude": 78.7,
+  "label": "SYNTHETIC DEMONSTRATION \u2014 generated weather, not historical observations or field measurements",
+  "method": "Markov-chain rain occurrence + gamma amounts + year factor; Hargreaves ET0 (FAO-56 eq. 52)"
+}

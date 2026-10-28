@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Semantic design tokens (HSL triplets). Palette: evergreen #123D34, emerald #168268,
+   cream #FAFAF7, mist #E9F3EE, slate #344054, sky #DCECF7, amber #B76C23. */
+@layer base {
+  :root {
+    --background: 60 20% 97.6%;
+    --foreground: 218 24% 18%;
+    --card: 0 0% 100%;
+    --card-foreground: 218 24% 18%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 218 24% 18%;
+    --brand: 167 54% 15%;
+    --brand-foreground: 60 20% 97.6%;
+    --primary: 165 71% 30%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 150 33% 93%;
+    --secondary-foreground: 167 54% 15%;
+    --muted: 150 25% 94%;
+    --muted-foreground: 218 16% 32%;
+    --accent: 205 63% 92%;
+    --accent-foreground: 210 50% 22%;
+    --warning: 29 68% 36%;
+    --warning-foreground: 0 0% 100%;
+    --warning-soft: 35 80% 94%;
+    --destructive: 4 76% 40%;
+    --destructive-foreground: 0 0% 100%;
+    --destructive-soft: 4 80% 96%;
+    --success: 152 60% 28%;
+    --success-soft: 150 40% 92%;
+    --border: 150 12% 86%;
+    --input: 150 10% 80%;
+    --ring: 165 71% 30%;
+    --sidebar: 167 54% 15%;
+    --sidebar-foreground: 150 20% 88%;
+    --sidebar-active: 165 55% 24%;
+    --sidebar-muted: 150 12% 68%;
+    --chart-1: 165 71% 30%;
+    --chart-2: 205 55% 45%;
+    --chart-3: 29 68% 43%;
+    --chart-4: 280 30% 50%;
+    --chart-5: 0 0% 45%;
+  }
+  .dark {
+    --background: 168 28% 7%;
+    --foreground: 150 20% 92%;
+    --card: 168 24% 10%;
+    --card-foreground: 150 20% 92%;
+    --popover: 168 24% 11%;
+    --popover-foreground: 150 20% 92%;
+    --brand: 167 40% 12%;
+    --brand-foreground: 150 20% 92%;
+    --primary: 162 52% 48%;
+    --primary-foreground: 168 40% 8%;
+    --secondary: 165 22% 17%;
+    --secondary-foreground: 150 20% 90%;
+    --muted: 165 18% 15%;
+    --muted-foreground: 150 10% 72%;
+    --accent: 205 30% 20%;
+    --accent-foreground: 205 60% 88%;
+    --warning: 33 75% 62%;
+    --warning-foreground: 30 50% 10%;
+    --warning-soft: 30 35% 16%;
+    --destructive: 4 70% 64%;
+    --destructive-foreground: 0 0% 8%;
+    --destructive-soft: 4 30% 16%;
+    --success: 152 45% 58%;
+    --success-soft: 152 25% 15%;
+    --border: 165 14% 21%;
+    --input: 165 12% 28%;
+    --ring: 162 52% 48%;
+    --sidebar: 168 32% 6%;
+    --sidebar-foreground: 150 15% 86%;
+    --sidebar-active: 165 35% 18%;
+    --sidebar-muted: 150 8% 62%;
+    --chart-1: 162 52% 52%;
+    --chart-2: 205 60% 65%;
+    --chart-3: 33 75% 62%;
+    --chart-4: 280 40% 70%;
+    --chart-5: 0 0% 70%;
+  }
+  * { @apply border-border; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { @apply bg-background text-foreground antialiased; font-size: 15px; line-height: 1.55; font-feature-settings: 'cv11', 'ss01'; }
+  h1, h2, h3 { @apply tracking-tight; }
+  :focus-visible { @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background; }
+  .tabular { font-variant-numeric: tabular-nums; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+}
+
+@media print {
+  aside, header[data-app-header], .no-print { display: none !important; }
+  main { padding: 0 !important; }
+}
