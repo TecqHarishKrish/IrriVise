@@ -90,3 +90,10 @@ def test_forecaster_refuses_future_or_misaligned_history(train):
 def test_ppo_methods_require_a_model(scenario, seasons, forecaster):
     with pytest.raises(ValueError, match="requires a trained PPO model"):
         run_episode(scenario, seasons[0], forecaster, 1, "carat_full")
+
+
+def test_daily_reference_is_not_budget_limited(scenario, seasons, forecaster):
+    from irrivise_core.baselines.policies import MethodSpec
+    spec = MethodSpec("daily_ref", "R", "daily", "threshold", "daily")
+    r = run_episode(scenario.model_copy(update={"observation_budget": 3}), seasons[0], forecaster, 1, spec)
+    assert r.summary["observation_count"] == scenario.crop.season_length

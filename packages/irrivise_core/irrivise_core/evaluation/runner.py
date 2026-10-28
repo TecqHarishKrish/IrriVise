@@ -58,6 +58,9 @@ def run_episode(scenario: ScenarioConfig, season: Season, forecaster: Climatolog
     if spec.needs_model and ppo_policy is None:
         raise ValueError(f"Method '{spec.key}' requires a trained PPO model; train one or choose a non-PPO baseline")
     started = time.perf_counter()
+    if spec.observation == "daily":
+        # Upper-information reference: one reading per day, deliberately NOT budget-matched.
+        scenario = scenario.model_copy(update={"observation_budget": scenario.crop.season_length})
     world = FieldWorld(scenario, season, forecaster, world_seed)
     carat = CaratEngine(scenario)
     risk = RiskManager(scenario, soft_enabled=spec.soft_risk)

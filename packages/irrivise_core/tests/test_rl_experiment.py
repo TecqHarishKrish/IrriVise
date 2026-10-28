@@ -97,6 +97,7 @@ def test_matched_experiment_with_baselines_and_stats(scenario, seasons, split, f
     comp = out["paired_vs_reference"]["soil_threshold"]
     assert comp["seasonal_irrigation_mm"]["n_pairs"] == 6 and comp["seasonal_irrigation_mm"]["ci95"] is not None
     assert any("simulated" in line for line in out["narrative"])
+    assert not any("Negative result for the proposed method" in line for line in out["narrative"])  # no proposed method in this set
     with pytest.raises(ValueError, match="trained PPO"):
         run_experiment(ExperimentConfig(methods=["ppo", "fixed_schedule"], seeds=[1]), scenario, test, forecaster)
     with pytest.raises(ValueError, match="No test seasons"):
@@ -122,3 +123,20 @@ def test_aquacrop_rainfed_vs_irrigated(frame):
     assert 0 <= rainfed["aquacrop_simulated_dry_yield_t_ha"] <= irrigated["aquacrop_simulated_dry_yield_t_ha"] < 30
     with pytest.raises(ValueError):
         aquacrop_adapter.evaluate_schedule(frame, "2010-06-15", [-1.0] * 140)
+
+
+def test_narrative_flags_negative_results_relative_to_proposed_method():
+    from irrivise_core.evaluation.experiment import narrative
+
+    def comp(lo, hi):
+        d = {"n_pairs": 10, "mean_difference": (lo + hi) / 2, "ci95": [lo, hi], "status": "x"}
+        return {"yield_proxy_t_ha": d, "seasonal_irrigation_mm": d, "cumulative_stress": d, "objective_with_observation_cost": d}
+
+    table = [{"method": "carat_full", "label": "Full CARAT", "runs": 10}, {"method": "ppo_random", "label": "Random", "runs": 10}]
+    # reference = proposed; a baseline beating it is a negative result for CARAT
+    cfg = ExperimentConfig(methods=["carat_full", "ppo_random"], reference_method="carat_full")
+    assert any("Negative result" in l for l in narrative(cfg, table, {"ppo_random": comp(0.1, 0.3)}, []))
+    assert not any("Negative result" in l for l in narrative(cfg, table, {"ppo_random": comp(-0.3, -0.1)}, []))
+    # reference = baseline; the proposed method losing is a negative result
+    cfg2 = ExperimentConfig(methods=["carat_full", "ppo_random"], reference_method="ppo_random")
+    assert any("Negative result" in l for l in narrative(cfg2, table, {"carat_full": comp(-0.3, -0.1)}, []))

@@ -1,0 +1,181 @@
+<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>IrriVise experiment report — Main benchmark v2: baselines, ablations and CARAT (test seasons)</title><style>
+body{font-family:Inter,system-ui,sans-serif;color:#1d2939;margin:32px auto;max-width:960px;padding:0 20px;line-height:1.5}
+h1{color:#123D34;margin-bottom:4px}h2{color:#123D34;border-bottom:1px solid #d0e2d9;padding-bottom:4px;margin-top:28px}
+table{border-collapse:collapse;width:100%;font-size:13px;margin:8px 0}th,td{border:1px solid #d0d5dd;padding:5px 7px;text-align:left}
+th{background:#E9F3EE}.note{background:#FAFAF7;border-left:3px solid #B76C23;padding:8px 12px;font-size:13px}
+.badge{display:inline-block;background:#fdf2e3;color:#7a4510;border:1px solid #e9cfa9;border-radius:4px;padding:2px 8px;font-size:12px;font-weight:600}
+figure{margin:12px 0}figcaption{font-size:12px;color:#475467}code{font-size:12px}
+@media print{body{margin:0}h2{break-after:avoid}figure,table{break-inside:avoid}}
+</style></head><body><h1>IrriVise experiment report — Main benchmark v2: baselines, ablations and CARAT (test seasons)</h1><p><span class='badge'>Simulated results — not field measurements</span> Generated 2026-10-28T19:00:11+00:00 by IrriVise from saved artifacts.</p><h2>Design</h2><p>Split: <b>test</b>; seeds [1, 2, 3, 4, 5]; observation budgets [10]; sensor noise [0.02] m³/m³ (nominal); reference method <b>carat_full</b>. All methods were evaluated on identical cells with common random numbers.</p><h2>What did the data show?</h2><ul><li>11 methods were run on 20 matched cell(s) each (split: test; seeds: 5). All outcomes are simulated; yields are FAO-33 proxies unless an AquaCrop column is shown. Differences are method − reference.</li><li>Fixed schedule (10 mm / 3 days) vs carat_full: irrigation +173.2 mm (worse (CI excludes 0)); yield proxy +0.013 t/ha (inconclusive (CI includes 0)); cumulative stress -0.51 (inconclusive (CI includes 0)); objective -13.221 (worse (CI excludes 0)); n = 20 pairs.</li><li>Soil-moisture threshold (MAD rule) vs carat_full: irrigation +13.8 mm (worse (CI excludes 0)); yield proxy +0.138 t/ha (inconclusive (CI includes 0)); cumulative stress -1.34 (better (CI excludes 0)); objective -1.678 (worse (CI excludes 0)); n = 20 pairs.</li><li>Standard PPO (no observations) vs carat_full: irrigation -7.5 mm (inconclusive (CI includes 0)); yield proxy -0.291 t/ha (worse (CI excludes 0)); cumulative stress +1.60 (worse (CI excludes 0)); objective -1.893 (inconclusive (CI includes 0)); n = 20 pairs.</li><li>PPO + fixed-interval readings vs carat_full: irrigation +4.0 mm (inconclusive (CI includes 0)); yield proxy -0.112 t/ha (inconclusive (CI includes 0)); cumulative stress +0.30 (inconclusive (CI includes 0)); objective -1.640 (worse (CI excludes 0)); n = 20 pairs.</li><li>PPO + random readings (matched budget) vs carat_full: irrigation -0.5 mm (inconclusive (CI includes 0)); yield proxy -0.086 t/ha (inconclusive (CI includes 0)); cumulative stress +0.25 (inconclusive (CI includes 0)); objective -1.237 (worse (CI excludes 0)); n = 20 pairs.</li><li>PPO + uncertainty-threshold readings vs carat_full: irrigation +10.8 mm (inconclusive (CI includes 0)); yield proxy -0.093 t/ha (inconclusive (CI includes 0)); cumulative stress +0.33 (inconclusive (CI includes 0)); objective -1.590 (inconclusive (CI includes 0)); n = 20 pairs.</li><li>PPO + CARAT readings, no soft risk layer vs carat_full: irrigation -6.0 mm (better (CI excludes 0)); yield proxy -0.123 t/ha (worse (CI excludes 0)); cumulative stress +0.57 (worse (CI excludes 0)); objective -0.969 (worse (CI excludes 0)); n = 20 pairs.</li><li>PPO + CARAT readings, no twin correction vs carat_full: irrigation +5.0 mm (inconclusive (CI includes 0)); yield proxy -0.125 t/ha (inconclusive (CI includes 0)); cumulative stress +0.82 (inconclusive (CI includes 0)); objective -1.426 (inconclusive (CI includes 0)); n = 20 pairs.</li><li>CARAT planner (lookahead action + VOI readings + risk) vs carat_full: irrigation +10.8 mm (worse (CI excludes 0)); yield proxy +0.225 t/ha (better (CI excludes 0)); cumulative stress -1.47 (better (CI excludes 0)); objective +0.797 (better (CI excludes 0)); n = 20 pairs.</li><li>Negative result for the proposed method: lookahead_carat beat carat_full on yield proxy with the CI excluding zero.</li><li>Negative result for the proposed method: lookahead_carat beat carat_full on objective with the CI excluding zero.</li><li>PPO + daily readings (upper-information reference) vs carat_full: irrigation -2.8 mm (inconclusive (CI includes 0)); yield proxy -0.080 t/ha (inconclusive (CI includes 0)); cumulative stress +0.44 (inconclusive (CI includes 0)); objective -14.300 (worse (CI excludes 0)); n = 20 pairs.</li><li>These results come from a simulated reference farm and do not demonstrate field performance.</li></ul><h2>Method summary (mean, bootstrap 95% CI)</h2><div style='overflow-x:auto'><table><tr><th>Method</th><th>Runs</th><th>Irrigation (mm)</th><th>Yield proxy (t/ha)</th><th>AquaCrop yield (t/ha)</th><th>Σ(1−Ks)</th><th>Readings</th><th>Twin RMSE (mm)</th><th>Objective</th></tr><tr><th>B0 Fixed schedule (10 mm / 3 days)</th><td>20 (0 failed)</td><td>350.000<br><small>[350.000, 350.000]</small></td><td>8.511<br><small>[8.061, 8.884]</small></td><td>14.798<br><small>[14.788, 14.808]</small></td><td>2.280<br><small>[0.519, 4.389]</small></td><td>0.000<br><small>[0.000, 0.000]</small></td><td>14.627<br><small>[10.551, 19.497]</small></td><td>-13.098<br><small>[-15.532, -11.095]</small></td></tr><tr><th>B1 Soil-moisture threshold (MAD rule)</th><td>20 (0 failed)</td><td>190.500<br><small>[151.000, 231.500]</small></td><td>8.637<br><small>[8.359, 8.874]</small></td><td>14.740<br><small>[14.710, 14.769]</small></td><td>1.451<br><small>[0.526, 2.566]</small></td><td>10.000<br><small>[10.000, 10.000]</small></td><td>10.828<br><small>[8.867, 12.781]</small></td><td>-1.554<br><small>[-5.265, 1.356]</small></td></tr><tr><th>B2 Standard PPO (no observations)</th><td>20 (0 failed)</td><td>169.250<br><small>[143.000, 194.000]</small></td><td>8.207<br><small>[7.569, 8.738]</small></td><td>14.705<br><small>[14.674, 14.735]</small></td><td>4.397<br><small>[1.424, 8.082]</small></td><td>0.000<br><small>[0.000, 0.000]</small></td><td>15.897<br><small>[12.371, 19.882]</small></td><td>-1.770<br><small>[-6.356, 1.967]</small></td></tr><tr><th>B3 PPO + fixed-interval readings</th><td>20 (0 failed)</td><td>180.750<br><small>[153.000, 209.250]</small></td><td>8.387<br><small>[7.886, 8.807]</small></td><td>14.705<br><small>[14.671, 14.740]</small></td><td>3.092<br><small>[0.989, 5.610]</small></td><td>10.000<br><small>[10.000, 10.000]</small></td><td>10.641<br><small>[8.656, 12.650]</small></td><td>-1.517<br><small>[-4.862, 1.313]</small></td></tr><tr><th>B4 PPO + random readings (matched budget)</th><td>20 (0 failed)</td><td>176.250<br><small>[147.244, 206.000]</small></td><td>8.412<br><small>[7.929, 8.823]</small></td><td>14.707<br><small>[14.676, 14.739]</small></td><td>3.039<br><small>[0.911, 5.568]</small></td><td>8.950<br><small>[8.250, 9.550]</small></td><td>10.415<br><small>[8.495, 12.427]</small></td><td>-1.114<br><small>[-4.375, 1.609]</small></td></tr><tr><th>B5 PPO + uncertainty-threshold readings</th><td>20 (0 failed)</td><td>187.500<br><small>[161.244, 211.750]</small></td><td>8.405<br><small>[7.840, 8.878]</small></td><td>14.714<br><small>[14.683, 14.744]</small></td><td>3.119<br><small>[0.680, 6.149]</small></td><td>10.000<br><small>[10.000, 10.000]</small></td><td>15.112<br><small>[12.157, 18.236]</small></td><td>-1.467<br><small>[-5.318, 1.654]</small></td></tr><tr><th>A5 PPO + CARAT readings, no soft risk layer</th><td>20 (0 failed)</td><td>170.750<br><small>[139.994, 202.250]</small></td><td>8.375<br><small>[7.886, 8.789]</small></td><td>14.710<br><small>[14.680, 14.741]</small></td><td>3.366<br><small>[1.098, 6.092]</small></td><td>5.600<br><small>[4.650, 6.450]</small></td><td>11.656<br><small>[9.468, 13.967]</small></td><td>-0.846<br><small>[-3.993, 1.843]</small></td></tr><tr><th>A6 PPO + CARAT readings, no twin correction</th><td>20 (0 failed)</td><td>181.750<br><small>[153.500, 208.006]</small></td><td>8.374<br><small>[7.797, 8.848]</small></td><td>14.702<br><small>[14.673, 14.732]</small></td><td>3.615<br><small>[0.940, 6.976]</small></td><td>8.150<br><small>[7.050, 9.050]</small></td><td>16.420<br><small>[12.875, 20.459]</small></td><td>-1.303<br><small>[-5.280, 1.854]</small></td></tr><tr><th>P Full CARAT (PPO + VOI readings + correction + risk)</th><td>20 (0 failed)</td><td>176.750<br><small>[144.250, 210.250]</small></td><td>8.499<br><small>[8.104, 8.828]</small></td><td>14.711<br><small>[14.681, 14.741]</small></td><td>2.792<br><small>[0.893, 5.116]</small></td><td>5.900<br><small>[4.950, 6.750]</small></td><td>11.533<br><small>[9.340, 13.841]</small></td><td>0.123<br><small>[-2.264, 2.138]</small></td></tr><tr><th>P-noPPO CARAT planner (lookahead action + VOI readings + risk)</th><td>20 (0 failed)</td><td>187.500<br><small>[145.994, 231.250]</small></td><td>8.723<br><small>[8.516, 8.906]</small></td><td>14.662<br><small>[14.625, 14.700]</small></td><td>1.322<br><small>[0.401, 2.430]</small></td><td>5.900<br><small>[4.900, 6.800]</small></td><td>11.714<br><small>[9.604, 13.990]</small></td><td>0.920<br><small>[-0.613, 2.266]</small></td></tr><tr><th>R-daily PPO + daily readings (upper-information reference)</th><td>20 (0 failed)</td><td>174.000<br><small>[143.231, 207.000]</small></td><td>8.419<br><small>[7.943, 8.825]</small></td><td>14.695<br><small>[14.655, 14.734]</small></td><td>3.235<br><small>[1.052, 5.744]</small></td><td>140.000<br><small>[140.000, 140.000]</small></td><td>6.839<br><small>[6.212, 7.425]</small></td><td>-14.177<br><small>[-17.236, -11.518]</small></td></tr></table></div><h2>Paired differences vs reference</h2><table><tr><th>Method</th><th>Metric</th><th>Mean diff.</th><th>95% CI</th><th>n</th><th>Wilcoxon p</th><th>Status</th></tr><tr><td>fixed_schedule</td><td>seasonal_irrigation_mm</td><td>+173.250</td><td>[139.750, 205.750]</td><td>20</td><td>1.9073486328125e-06</td><td>worse (CI excludes 0)</td></tr><tr><td>fixed_schedule</td><td>yield_proxy_t_ha</td><td>+0.013</td><td>[-0.174, 0.220]</td><td>20</td><td>0.8175811767578125</td><td>inconclusive (CI includes 0)</td></tr><tr><td>fixed_schedule</td><td>cumulative_stress</td><td>-0.512</td><td>[-1.397, 0.285]</td><td>20</td><td>0.17425537109375</td><td>inconclusive (CI includes 0)</td></tr><tr><td>fixed_schedule</td><td>objective_with_observation_cost</td><td>-13.221</td><td>[-14.232, -11.946]</td><td>20</td><td>1.9073486328125e-06</td><td>worse (CI excludes 0)</td></tr><tr><td>soil_threshold</td><td>seasonal_irrigation_mm</td><td>+13.750</td><td>[6.000, 22.000]</td><td>20</td><td>0.00384521484375</td><td>worse (CI excludes 0)</td></tr><tr><td>soil_threshold</td><td>yield_proxy_t_ha</td><td>+0.138</td><td>[-0.018, 0.304]</td><td>20</td><td>0.15142822265625</td><td>inconclusive (CI includes 0)</td></tr><tr><td>soil_threshold</td><td>cumulative_stress</td><td>-1.341</td><td>[-2.709, -0.220]</td><td>20</td><td>0.04791259765625</td><td>better (CI excludes 0)</td></tr><tr><td>soil_threshold</td><td>objective_with_observation_cost</td><td>-1.678</td><td>[-4.231, -0.216]</td><td>20</td><td>0.026641845703125</td><td>worse (CI excludes 0)</td></tr><tr><td>ppo</td><td>seasonal_irrigation_mm</td><td>-7.500</td><td>[-22.500, 7.000]</td><td>20</td><td>0.3954620361328125</td><td>inconclusive (CI includes 0)</td></tr><tr><td>ppo</td><td>yield_proxy_t_ha</td><td>-0.291</td><td>[-0.604, -0.005]</td><td>20</td><td>0.072998046875</td><td>worse (CI excludes 0)</td></tr><tr><td>ppo</td><td>cumulative_stress</td><td>+1.605</td><td>[0.185, 3.174]</td><td>20</td><td>0.041259765625</td><td>worse (CI excludes 0)</td></tr><tr><td>ppo</td><td>objective_with_observation_cost</td><td>-1.893</td><td>[-4.482, 0.387]</td><td>20</td><td>0.6225624084472656</td><td>inconclusive (CI includes 0)</td></tr><tr><td>ppo_fixed_interval</td><td>seasonal_irrigation_mm</td><td>+4.000</td><td>[-2.750, 10.500]</td><td>20</td><td>0.274444580078125</td><td>inconclusive (CI includes 0)</td></tr><tr><td>ppo_fixed_interval</td><td>yield_proxy_t_ha</td><td>-0.112</td><td>[-0.239, 0.000]</td><td>20</td><td>0.252227783203125</td><td>inconclusive (CI includes 0)</td></tr><tr><td>ppo_fixed_interval</td><td>cumulative_stress</td><td>+0.300</td><td>[-0.078, 0.700]</td><td>20</td><td>0.1590576171875</td><td>inconclusive (CI includes 0)</td></tr><tr><td>ppo_fixed_interval</td><td>objective_with_observation_cost</td><td>-1.640</td><td>[-2.755, -0.709]</td><td>20</td><td>6.29425048828125e-05</td><td>worse (CI excludes 0)</td></tr><tr><td>ppo_random</td><td>seasonal_irrigation_mm</td><td>-0.500</td><td>[-6.250, 5.250]</td><td>20</td><td>1.0</td><td>inconclusive (CI includes 0)</td></tr><tr><td>ppo_random</td><td>yield_proxy_t_ha</td><td>-0.086</td><td>[-0.205, 0.020]</td><td>20</td><td>0.625732421875</td><td>inconclusive (CI includes 0)</td></tr><tr><td>ppo_random</td><td>cumulative_stress</td><td>+0.246</td><td>[-0.108, 0.629]</td><td>20</td><td>0.267578125</td><td>inconclusive (CI includes 0)</td></tr><tr><td>ppo_random</td><td>objective_with_observation_cost</td><td>-1.237</td><td>[-2.250, -0.381]</td><td>20</td><td>0.0019855499267578125</td><td>worse (CI excludes 0)</td></tr><tr><td>ppo_uncertainty</td><td>seasonal_irrigation_mm</td><td>+10.750</td><td>[-2.500, 23.250]</td><td>20</td><td>0.1230926513671875</td><td>inconclusive (CI includes 0)</td></tr><tr><td>ppo_uncertainty</td><td>yield_proxy_t_ha</td><td>-0.093</td><td>[-0.346, 0.146]</td><td>20</td><td>0.7466583251953125</td><td>inconclusive (CI includes 0)</td></tr><tr><td>ppo_uncertainty</td><td>cumulative_stress</td><td>+0.326</td><td>[-0.580, 1.303]</td><td>20</td><td>0.8899688720703125</td><td>inconclusive (CI includes 0)</td></tr><tr><td>ppo_uncertainty</td><td>objective_with_observation_cost</td><td>-1.590</td><td>[-3.463, 0.142]</td><td>20</td><td>0.001689910888671875</td><td>inconclusive (CI includes 0)</td></tr><tr><td>ppo_carat_no_risk</td><td>seasonal_irrigation_mm</td><td>-6.000</td><td>[-10.750, -1.500]</td><td>20</td><td>0.01806640625</td><td>better (CI excludes 0)</td></tr><tr><td>ppo_carat_no_risk</td><td>yield_proxy_t_ha</td><td>-0.123</td><td>[-0.252, -0.025]</td><td>20</td><td>0.01708984375</td><td>worse (CI excludes 0)</td></tr><tr><td>ppo_carat_no_risk</td><td>cumulative_stress</td><td>+0.573</td><td>[0.139, 1.162]</td><td>20</td><td>0.01708984375</td><td>worse (CI excludes 0)</td></tr><tr><td>ppo_carat_no_risk</td><td>objective_with_observation_cost</td><td>-0.969</td><td>[-1.885, -0.204]</td><td>20</td><td>0.168792724609375</td><td>worse (CI excludes 0)</td></tr><tr><td>ppo_carat_no_correction</td><td>seasonal_irrigation_mm</td><td>+5.000</td><td>[-8.500, 17.750]</td><td>20</td><td>0.4180412292480469</td><td>inconclusive (CI includes 0)</td></tr><tr><td>ppo_carat_no_correction</td><td>yield_proxy_t_ha</td><td>-0.125</td><td>[-0.393, 0.134]</td><td>20</td><td>0.339599609375</td><td>inconclusive (CI includes 0)</td></tr><tr><td>ppo_carat_no_correction</td><td>cumulative_stress</td><td>+0.823</td><td>[-0.418, 2.186]</td><td>20</td><td>0.243896484375</td><td>inconclusive (CI includes 0)</td></tr><tr><td>ppo_carat_no_correction</td><td>objective_with_observation_cost</td><td>-1.426</td><td>[-3.453, 0.435]</td><td>20</td><td>0.00830841064453125</td><td>inconclusive (CI includes 0)</td></tr><tr><td>lookahead_carat</td><td>seasonal_irrigation_mm</td><td>+10.750</td><td>[1.000, 21.500]</td><td>20</td><td>0.1083831787109375</td><td>worse (CI excludes 0)</td></tr><tr><td>lookahead_carat</td><td>yield_proxy_t_ha</td><td>+0.225</td><td>[0.058, 0.425]</td><td>20</td><td>0.0347900390625</td><td>better (CI excludes 0)</td></tr><tr><td>lookahead_carat</td><td>cumulative_stress</td><td>-1.471</td><td>[-2.711, -0.445]</td><td>20</td><td>0.00665283203125</td><td>better (CI excludes 0)</td></tr><tr><td>lookahead_carat</td><td>objective_with_observation_cost</td><td>+0.797</td><td>[0.043, 1.747]</td><td>20</td><td>0.14290618896484375</td><td>better (CI excludes 0)</td></tr><tr><td>ppo_daily</td><td>seasonal_irrigation_mm</td><td>-2.750</td><td>[-9.250, 4.000]</td><td>20</td><td>0.668548583984375</td><td>inconclusive (CI includes 0)</td></tr><tr><td>ppo_daily</td><td>yield_proxy_t_ha</td><td>-0.080</td><td>[-0.200, 0.025]</td><td>20</td><td>0.550872802734375</td><td>inconclusive (CI includes 0)</td></tr><tr><td>ppo_daily</td><td>cumulative_stress</td><td>+0.443</td><td>[-0.214, 1.258]</td><td>20</td><td>0.6705245971679688</td><td>inconclusive (CI includes 0)</td></tr><tr><td>ppo_daily</td><td>objective_with_observation_cost</td><td>-14.300</td><td>[-15.176, -13.556]</td><td>20</td><td>1.9073486328125e-06</td><td>worse (CI excludes 0)</td></tr></table><p class='note'>Failed runs: 0. Hard-constraint violations across all runs: 0.</p><h2>Limitations</h2><ul><li>All farm outcomes are simulated. The reference farm is a hidden simulation, not a measured field.</li><li>yield_proxy_t_ha is an FAO-33 stage yield-response proxy from the fast surrogate; it is not measured yield.</li><li>AquaCrop values (when present) are AquaCrop-OSPy simulations of the applied schedule with default, uncalibrated parameters.</li><li>CARAT regret and value of information are estimates under the twin&#x27;s own model, not oracle quantities.</li><li>Synthetic demonstration weather is generated, not historical; NASA POWER data are gridded estimates, not on-farm observations.</li></ul><h2>Reproducibility manifest</h2><pre style='white-space:pre-wrap;font-size:11px;background:#f9fafb;padding:10px'>{
+ &quot;code_revision&quot;: &quot;4f3c9c895bacc823c871e573c7c3fb53a3900df0+dirty&quot;,
+ &quot;package_versions&quot;: {
+  &quot;python&quot;: &quot;3.12.3&quot;,
+  &quot;numpy&quot;: &quot;1.26.4&quot;,
+  &quot;pandas&quot;: &quot;2.2.3&quot;,
+  &quot;scipy&quot;: &quot;1.14.1&quot;,
+  &quot;gymnasium&quot;: &quot;1.0.0&quot;,
+  &quot;stable-baselines3&quot;: &quot;2.4.1&quot;,
+  &quot;torch&quot;: &quot;2.5.1&quot;,
+  &quot;aquacrop&quot;: &quot;3.1.0&quot;,
+  &quot;fastapi&quot;: &quot;0.115.12&quot;,
+  &quot;sqlalchemy&quot;: &quot;2.0.41&quot;,
+  &quot;pydantic&quot;: &quot;2.11.4&quot;
+ },
+ &quot;created_at&quot;: &quot;2026-10-28T18:58:08.249216Z&quot;,
+ &quot;experiment_id&quot;: &quot;6d71b46b-1e35-4c56-bc7c-fed6b1785049&quot;,
+ &quot;config&quot;: {
+  &quot;name&quot;: &quot;Main benchmark v2: baselines, ablations and CARAT (test seasons)&quot;,
+  &quot;methods&quot;: [
+   &quot;fixed_schedule&quot;,
+   &quot;soil_threshold&quot;,
+   &quot;ppo&quot;,
+   &quot;ppo_fixed_interval&quot;,
+   &quot;ppo_random&quot;,
+   &quot;ppo_uncertainty&quot;,
+   &quot;ppo_carat_no_risk&quot;,
+   &quot;ppo_carat_no_correction&quot;,
+   &quot;carat_full&quot;,
+   &quot;lookahead_carat&quot;,
+   &quot;ppo_daily&quot;
+  ],
+  &quot;reference_method&quot;: &quot;carat_full&quot;,
+  &quot;split&quot;: &quot;test&quot;,
+  &quot;seeds&quot;: [
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  &quot;observation_budgets&quot;: [
+   10
+  ],
+  &quot;sensor_noise_m3m3&quot;: [
+   0.02
+  ],
+  &quot;sensor_mode&quot;: &quot;nominal&quot;,
+  &quot;uncertainty_threshold&quot;: 0.06,
+  &quot;aquacrop&quot;: true,
+  &quot;max_runs&quot;: 600
+ },
+ &quot;scenario_config&quot;: {
+  &quot;crop&quot;: {
+   &quot;name&quot;: &quot;maize&quot;,
+   &quot;stage_lengths_days&quot;: [
+    25,
+    40,
+    45,
+    30
+   ],
+   &quot;kc_ini&quot;: 0.3,
+   &quot;kc_mid&quot;: 1.2,
+   &quot;kc_end&quot;: 0.35,
+   &quot;root_min_m&quot;: 0.3,
+   &quot;root_max_m&quot;: 1.0,
+   &quot;depletion_p&quot;: 0.55,
+   &quot;ky_stage&quot;: [
+    0.4,
+    0.4,
+    1.5,
+    0.5
+   ],
+   &quot;max_yield_t_ha&quot;: 9.0,
+   &quot;source&quot;: &quot;FAO-56 Tables 11, 12, 22; FAO-33 Ky; values are generic defaults, not site-calibrated&quot;
+  },
+  &quot;soil&quot;: {
+   &quot;name&quot;: &quot;sandy_loam&quot;,
+   &quot;theta_wp&quot;: 0.1,
+   &quot;theta_fc&quot;: 0.23,
+   &quot;theta_sat&quot;: 0.41,
+   &quot;drainage_tau&quot;: 0.76,
+   &quot;curve_number&quot;: 72.0,
+   &quot;source&quot;: &quot;FAO-56 Table 19 ranges; AquaCrop tau relation; USDA TR-55 CN&quot;
+  },
+  &quot;planting_mmdd&quot;: &quot;06-15&quot;,
+  &quot;daily_max_mm&quot;: 20.0,
+  &quot;seasonal_budget_mm&quot;: 350.0,
+  &quot;observation_budget&quot;: 10,
+  &quot;sensor&quot;: {
+   &quot;noise_std_m3m3&quot;: 0.02,
+   &quot;mode&quot;: &quot;nominal&quot;,
+   &quot;missing_probability&quot;: 0.25,
+   &quot;bias_m3m3&quot;: 0.03,
+   &quot;stuck_after_day&quot;: 40,
+   &quot;delay_days&quot;: 2,
+   &quot;outlier_sigma&quot;: 4.0,
+   &quot;charge_failed_attempts&quot;: false
+  },
+  &quot;uncertainty&quot;: {
+   &quot;ensemble_size&quot;: 20,
+   &quot;initial_fraction_mean&quot;: 0.7,
+   &quot;initial_fraction_std&quot;: 0.12,
+   &quot;soil_param_rel_std&quot;: 0.08,
+   &quot;et_multiplier_std&quot;: 0.08,
+   &quot;process_noise_rel_std&quot;: 0.1,
+   &quot;observed_rain_rel_std&quot;: 0.15
+  },
+  &quot;reward&quot;: {
+   &quot;water&quot;: 0.2,
+   &quot;stress&quot;: 1.0,
+   &quot;violation&quot;: 2.0,
+   &quot;observation&quot;: 0.1,
+   &quot;terminal_yield&quot;: 5.0
+  },
+  &quot;carat&quot;: {
+   &quot;horizon_days&quot;: 5,
+   &quot;discount&quot;: 0.97,
+   &quot;hypothetical_samples&quot;: 16,
+   &quot;observation_cost&quot;: 0.0,
+   &quot;budget_shadow_price&quot;: 0.02,
+   &quot;observe_threshold&quot;: 0.0,
+   &quot;voi_update&quot;: &quot;reweight&quot;,
+   &quot;regret_tolerance&quot;: 1e-09,
+   &quot;terminal_depletion_weight&quot;: 0.5
+  },
+  &quot;risk&quot;: {
+   &quot;enabled&quot;: true,
+   &quot;max_stress_probability&quot;: 0.5,
+   &quot;sensitive_ky&quot;: 1.0,
+   &quot;max_waste_fraction&quot;: 0.6
+  },
+  &quot;actions_mm&quot;: [
+   0.0,
+   5.0,
+   10.0,
+   15.0,
+   20.0
+  ]
+ },
+ &quot;scenario_sha256&quot;: &quot;088142a8cc37525228ce32c0fd64515dc7ca4a8ac1e1365e7c341fcce9e466f3&quot;,
+ &quot;dataset_id&quot;: &quot;ce2362b7-3197-4766-9a38-8afca965f2a4&quot;,
+ &quot;weather_dataset_checksum&quot;: &quot;bb092b66fb839597bcb7ec436f394e4321d3a6336ab632cd647cb9510e261195&quot;,
+ &quot;split&quot;: &quot;test&quot;,
+ &quot;split_rule&quot;: &quot;chronological 12/4/4 whole-season split&quot;,
+ &quot;evaluation_seasons&quot;: [
+  &quot;2020&quot;,
+  &quot;2021&quot;,
+  &quot;2022&quot;,
+  &quot;2023&quot;
+ ],
+ &quot;forecast_training_seasons&quot;: [
+  &quot;2004&quot;,
+  &quot;2005&quot;,
+  &quot;2006&quot;,
+  &quot;2007&quot;,
+  &quot;2008&quot;,
+  &quot;2009&quot;,
+  &quot;2010&quot;,
+  &quot;2011&quot;,
+  &quot;2012&quot;,
+  &quot;2013&quot;,
+  &quot;2014&quot;,
+  &quot;2015&quot;
+ ],
+ &quot;model_id&quot;: &quot;5254f0b2-5a85-423f-9c99-aa81d0b74120&quot;,
+ &quot;model_checkpoint_sha256&quot;: &quot;3aa651e51131284dc506a03a5a9eb7b0eb22f65c0dedf85bfb5ba4080fcf2493&quot;,
+ &quot;files&quot;: {
+  &quot;results.csv&quot;: &quot;88e69e4ee14eabd77a959c97a707c00956981f6b919c36197f28756ca1ac7c2d&quot;,
+  &quot;summary.json&quot;: &quot;7f943628409a2859ada1c5ba364d07b53302f771096c7f961bf4373606e2e099&quot;
+ },
+ &quot;matching&quot;: &quot;identical (season, seed, observation budget, sensor noise) cells and common random numbers for all methods&quot;
+}</pre></body></html>

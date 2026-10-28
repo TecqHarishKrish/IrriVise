@@ -165,24 +165,36 @@ def summarise(config: ExperimentConfig, rows: list[dict], failures: list[dict], 
 
 
 def narrative(config: ExperimentConfig, table: list[dict], comparisons: dict, failures: list[dict]) -> list[str]:
-    """Deterministic 'What did the data show?' sentences generated from the numbers above."""
+    """Deterministic 'What did the data show?' sentences generated from the numbers above.
+
+    Differences are always "method − reference". Results are flagged as negative *for the proposed
+    method* (role 'proposed'), whichever side of the comparison it is on.
+    """
     lines = []
     ref = config.reference_method
+    proposed = {m for m in config.methods if METHODS[m].role == "proposed"}
     n_cells = max((t["runs"] for t in table), default=0)
     lines.append(f"{len(table)} methods were run on {n_cells} matched cell(s) each (split: {config.split}; seeds: {len(config.seeds)}). "
-                 "All outcomes are simulated; yields are FAO-33 proxies unless an AquaCrop column is shown.")
+                 "All outcomes are simulated; yields are FAO-33 proxies unless an AquaCrop column is shown. Differences are method − reference.")
     for method, comp in comparisons.items():
         label = next(t["label"] for t in table if t["method"] == method)
-        y, w, s = comp["yield_proxy_t_ha"], comp["seasonal_irrigation_mm"], comp["cumulative_stress"]
+        y, w, s, o = comp["yield_proxy_t_ha"], comp["seasonal_irrigation_mm"], comp["cumulative_stress"], comp["objective_with_observation_cost"]
         if y.get("n_pairs", 0) == 0:
             lines.append(f"{label}: no paired runs with {ref}.")
             continue
         parts = [f"{label} vs {ref}: irrigation {w['mean_difference']:+.1f} mm ({w['status']})",
                  f"yield proxy {y['mean_difference']:+.3f} t/ha ({y['status']})",
-                 f"cumulative stress {s['mean_difference']:+.2f} ({s['status']})"]
+                 f"cumulative stress {s['mean_difference']:+.2f} ({s['status']})",
+                 f"objective {o['mean_difference']:+.3f} ({o['status']})"]
         lines.append("; ".join(parts) + f"; n = {y['n_pairs']} pairs.")
-        if y.get("ci95") and (y["ci95"][1] < 0):
-            lines.append(f"Negative result: {label} produced a lower simulated yield proxy than {ref} with the CI excluding zero.")
+        for metric, name in ((y, "yield proxy"), (o, "objective")):
+            if not metric.get("ci95"):
+                continue
+            method_better = metric["ci95"][0] > 0
+            method_worse = metric["ci95"][1] < 0
+            if (method in proposed and method_worse) or (ref in proposed and method_better):
+                winner, loser = (ref, method) if method_worse else (method, ref)
+                lines.append(f"Negative result for the proposed method: {winner} beat {loser} on {name} with the CI excluding zero.")
     if any(t["runs"] < 5 for t in table):
         lines.append("Caution: fewer than 5 paired runs for at least one method — treat differences as descriptive, not conclusive.")
     if failures:
