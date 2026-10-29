@@ -1,6 +1,6 @@
 # IrriVise / CARAT — handover document
 
-_Last updated: 2026-10-29. Use this to continue the work in a new chat or by hand._
+_Last updated: 2026-10-29 (after adding sensor-bias handling). Use this to continue the work in a new chat or by hand._
 
 ## 1. Project in one paragraph
 
@@ -8,49 +8,22 @@ _Last updated: 2026-10-29. Use this to continue the work in a new chat or by han
 
 Repository: https://github.com/TecqHarishKrish/IrriVise
 
-## 2. Where the code is (important)
+## 2. Where the code is
 
 | Item | State |
 |---|---|
-| Branch | `claude/irrivise-end-to-end-t9d73t`, **6 commits** on top of `main` @ `3e5ecf4` |
-| On GitHub? | **No.** Every push returned HTTP 403: the Claude GitHub App has no write access to the repo (reading works). |
-| Copy you have | `irrivise-end-to-end.bundle` (git bundle containing all 6 commits) |
+| Branch | `claude/irrivise-end-to-end-t9d73t` on GitHub, on top of `main` @ `3e5ecf4` |
+| Get it | `git fetch origin claude/irrivise-end-to-end-t9d73t && git checkout claude/irrivise-end-to-end-t9d73t` |
+| Merge | Open a pull request into `main`; the branch starts from `main`, so it fast-forwards. |
+| Not in git | Trained PPO checkpoints (`artifacts/` is ignored). Retrain with `.venv/bin/python scripts/train_ppo.py --preset cpu_standard --dataset sample` (≈ 5 min/seed); the recorded model was seed 44 (`docs/results/model_5254f0b2-….json`). |
 
-Commits (oldest first):
-1. `7445de6` Rebuild IrriVise as an end-to-end CARAT research platform
-2. `4f3c9c8` Add frontend tests, E2E journey, CLI integration tests, validation tuning and docs
-3. `6d1327e` Fix daily-reading reference budget and narrative semantics; add results
-4. `f8e8ab8` Add reproducibility record, implementation status, CLI model-root and AquaCrop options
-5. `d29e995` Correct recorded Python version; ignore TypeScript build info
-6. Add handover document (this file)
-
-### Get it onto GitHub — option A: push the bundle yourself
-Run inside your local clone of IrriVise, with the bundle file in that folder:
-
-```bash
-git fetch origin main
-```
-
-```bash
-git fetch ./irrivise-end-to-end.bundle claude/irrivise-end-to-end-t9d73t:claude/irrivise-end-to-end-t9d73t
-```
-
-```bash
-git push -u origin claude/irrivise-end-to-end-t9d73t
-```
-
-Then open a pull request into `main` on GitHub, or merge directly (it fast-forwards): `git checkout main && git merge claude/irrivise-end-to-end-t9d73t && git push`.
-
-### Option B: let Claude push
-1. Install the Claude GitHub App on `IrriVise` with **Contents: Read and write**: https://github.com/apps/claude/installations/select_target
-2. Reconnect GitHub in Claude: https://claude.ai/customize/connectors?auth_start=github&auth_start_force=1
-3. Ask Claude to push the branch.
+Commits, oldest first: `7445de6` platform rebuild · `4f3c9c8` tests, E2E, CLI, validation tuning, docs · `6d1327e` daily-reference fix and results · `f8e8ab8` reproducibility record · `d29e995` Python version, ignore rule · `640d682` handover · then sensor-bias handling (2026-10-29: code, then results and docs).
 
 ## 3. What was built (all working and tested)
 
 **Scientific core** (`packages/irrivise_core/irrivise_core/`)
 - `simulation/`: FAO-56 root-zone water balance with mass-balance checks; hidden reference farm with random soil parameters; budgeted noisy sensor (dropout, bias, stuck and delay faults); climatology + persistence forecasts built only from past data.
-- `twin/`: 20-member ensemble digital twin with Kalman correction and outlier gate.
+- `twin/`: 20-member ensemble digital twin with Kalman correction, outlier gate and sensor-offset (bias) estimation (`scenario.twin_bias`, METHODOLOGY §5.1).
 - `carat/`: lookahead action values, estimated regret, value of information, budget shadow price, risk manager (hard limits + soft stress/waste layer).
 - `envs/`, `agents/`: Gymnasium environment; Stable-Baselines3 PPO with presets, validation-based checkpoint selection and hash-verified loading.
 - `baselines/`, `evaluation/`: baselines B0–B5, ablations A5/A6, matched experiments, paired bootstrap CIs, generated "What did the data show?" text.
@@ -95,7 +68,8 @@ cd apps/web && npx playwright test
 | Frontend unit tests (Vitest) | 22 passed |
 | Playwright end-to-end | 3 passed (full 10-step journey, mobile, keyboard) |
 | Worker cancel / crash recovery | verified on the live system |
-| CLI re-run of main benchmark | reproduced every saved number exactly |
+| CLI re-run of main benchmark | reproduced every saved number exactly (before bias handling; use `--twin-bias none` now) |
+| 2026-10-29 bias-handling session | 47 core tests passed (torch/SB3/FastAPI unavailable, so RL, data-download, API and frontend tests were not run) |
 
 ## 6. Results so far (simulated farm, synthetic weather)
 
@@ -114,22 +88,35 @@ Setup: PPO standard preset (150k steps × 3 seeds). Best model seed 44, model id
 - **Against CARAT:**
   - The planner version without PPO beat full CARAT on yield and stress.
   - Daily readings (140 per season) did not improve PPO's yield.
-  - A wet-biased sensor made correction-based methods no better than PPO without readings.
+  - A wet-biased sensor made correction-based methods no better than PPO without readings (recorded before bias handling).
 
   The PPO policy looks like the weak link.
 - **Caveat:** AquaCrop (default parameters) gave 14.7–14.8 t/ha for every method, so it doesn't yet discriminate between methods.
+
+### Sensor-bias handling (added 2026-10-29)
+
+The twin now estimates a sensor offset alongside soil water (default `twin_bias.method: augmented`; an innovation-sequence CUSUM monitor is the alternative; `none` reproduces earlier runs exactly). PPO could not be installed in that session, so it was evaluated with the planners that need no model, on test seasons × 5 seeds:
+
+| Fault | Planner | Yield proxy, none → augmented (t/ha) |
+|---|---|---|
+| +0.03 wet bias | CARAT planner | 7.99 → **8.52** (+0.53, CI excludes 0) |
+| +0.03 wet bias | Soil threshold | 7.86 → **8.41** (+0.55, CI excludes 0) |
+| stuck | Soil threshold | 7.95 → **8.38** (+0.43, CI excludes 0) |
+| healthy sensor | CARAT planner | 8.72 → 8.67 (inconclusive) |
+
+Cost: with a healthy sensor the twin RMSE rises 11.7 → 14.3 mm, because part of the twin's own systematic error is blamed on the sensor. Full tables: `docs/results/sensor_bias_nonppo_test.md`; tuning (validation only): `docs/results/sensor_bias_tuning.json`.
 
 Full tables: `docs/results/main_benchmark.md`, `docs/results/robustness_breakdown.md`, `docs/results/sensor_faults.md`.
 
 ## 7. Known issues / open work (priority order)
 
-1. **Push the branch** (section 2).
-2. **Sensor-bias detection** in the twin: monitor the innovation sequence and down-weight or reject persistently biased readings. Then re-run the sensor-fault experiment.
-3. **NASA POWER live download** is untested against the real service (blocked in the build sandbox; tested only with recorded responses). Try one real download and simulate on it.
+1. **Re-run the PPO sensor-fault experiment with bias handling:** retrain PPO, then `./scripts/run_sensor_faults.sh --model-id <id>`. Compare with `docs/results/sensor_faults.md` (biased: Full CARAT 8.07 t/ha vs 8.05 for PPO without readings). Then re-run the main benchmark and robustness sweep with the new default, and run `./scripts/smoke_test.sh` and Playwright (not run in the bias-handling session).
+2. **Healthy-sensor cost of bias handling:** try enabling offset estimation only after the innovation monitor fires, or reduce the twin's own systematic drift, so a healthy sensor is not partly blamed.
+3. **NASA POWER live download** is untested against the real service. Try one real download and simulate on it.
 4. Calibrate AquaCrop against the fast simulator (or the reverse) so AquaCrop yields can tell methods apart.
 5. Run the research PPO preset (500k × 5 seeds) and try training PPO with CARAT readings in the loop.
 6. Not done: storage quotas are reported but not enforced; no login for non-local use; Windows scripts untested; no automated accessibility audit.
 
 ## 8. Short version to paste into a new chat
 
-> We're building IrriVise (repo TecqHarishKrish/IrriVise), a local web platform for CARAT: PPO irrigation + digital twin + value-of-information soil readings + risk manager, on a simulated farm. Done: full scientific core, FastAPI backend with worker, 11-page React UI, 71+22+3 passing tests, PPO trained, benchmarks run (CARAT beat matched-budget reading baselines on reward with fewer readings; the planner without PPO did better; a biased sensor hurts). The code is on branch `claude/irrivise-end-to-end-t9d73t` (6 commits) in the attached git bundle; it isn't on GitHub yet because the Claude app lacks write access. Next: push the branch, then add sensor-bias detection and re-run the sensor-fault experiment.
+> We're building IrriVise (repo TecqHarishKrish/IrriVise, branch `claude/irrivise-end-to-end-t9d73t`), a local web platform for CARAT: PPO irrigation + digital twin + value-of-information soil readings + risk manager, on a simulated farm. Done: scientific core, FastAPI backend with worker, 11-page React UI, PPO trained, benchmarks run. CARAT beat matched-budget reading baselines on reward with fewer readings; the planner without PPO did better. On 2026-10-29 sensor-bias handling was added to the twin (augmented soil + sensor-offset state, default; CUSUM monitor alternative): with PPO-free planners it recovered most of the wet-bias yield loss (+0.53 t/ha) at a small healthy-sensor cost. PPO checkpoints are not in git. Next: retrain PPO and re-run the sensor-fault experiment (`./scripts/run_sensor_faults.sh`), then the main benchmark, then run the full test suite. Read HANDOFF.md, IMPLEMENTATION_STATUS.md and METHODOLOGY.md §5.1 first.

@@ -107,7 +107,7 @@ class UncertaintyConfig(_Frozen):
 
 
 class TwinBiasConfig(_Frozen):
-    """How the twin guards against a sensor with a persistent offset (METHODOLOGY.md §2.4).
+    """How the twin guards against a sensor with a persistent offset (METHODOLOGY.md §5.1).
 
     ``augmented``: every ensemble member also carries a candidate sensor offset
     (prior N(0, prior_std²), slow random-walk drift); each reading updates storage

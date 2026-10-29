@@ -1,0 +1,3803 @@
+{
+ "purpose": "Choose twin_bias prior/drift for the augmented offset state using VALIDATION seasons only (2016-2019).",
+ "split": "validation",
+ "seeds": [
+  1,
+  2,
+  3,
+  4,
+  5
+ ],
+ "planners": [
+  "soil_threshold",
+  "lookahead_carat"
+ ],
+ "faults": [
+  "nominal",
+  "missing",
+  "biased+",
+  "biased-",
+  "stuck"
+ ],
+ "budget": 10,
+ "noise_m3m3": 0.02,
+ "objective": "objective_with_observation_cost (higher is better); by_cell keys use reward=objective, reads=observation_count, rmse=twin_rmse_mm, bias=twin_bias_mm",
+ "selection_rule": "Highest fault-averaged objective among settings whose end-of-season offset std sqrt(prior^2 + 140*drift^2) is <= 0.05 m3/m3 and whose nominal objective is within 0.25 of method 'none'. Larger drifts scored higher only by letting the offset uncertainty grow until readings are effectively ignored.",
+ "selected": {
+  "prior_std_m3m3": 0.015,
+  "drift_std_m3m3": 0.003
+ },
+ "note": "Generated with a working copy of scripts/sensor_bias_bench.py (same scenario, faults and planners) on the code committed as 'Add sensor-bias handling to the digital twin'. SIMULATED - not field data.",
+ "grid": [
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.01,
+   "drift_std_m3m3": 0.012,
+   "fault_mean_objective": 2.2632,
+   "nominal_mean_objective": 2.3135,
+   "end_of_season_offset_std_m3m3": 0.1423,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.784,
+     "water": 98.0,
+     "stress": 0.763,
+     "reads": 10.0,
+     "rmse": 12.487,
+     "bias": 2.437,
+     "reward": 1.49
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.896,
+     "water": 103.0,
+     "stress": 0.424,
+     "reads": 0.9,
+     "rmse": 13.039,
+     "bias": 2.59,
+     "reward": 3.137
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.811,
+     "water": 100.0,
+     "stress": 0.681,
+     "reads": 10.0,
+     "rmse": 12.504,
+     "bias": 2.271,
+     "reward": 1.633
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.896,
+     "water": 103.25,
+     "stress": 0.424,
+     "reads": 0.85,
+     "rmse": 13.027,
+     "bias": 2.636,
+     "reward": 3.139
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.745,
+     "water": 95.0,
+     "stress": 1.08,
+     "reads": 10.0,
+     "rmse": 12.447,
+     "bias": 3.33,
+     "reward": 1.314
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.896,
+     "water": 102.25,
+     "stress": 0.424,
+     "reads": 0.85,
+     "rmse": 13.001,
+     "bias": 2.661,
+     "reward": 3.149
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.801,
+     "water": 103.0,
+     "stress": 0.649,
+     "reads": 10.0,
+     "rmse": 12.789,
+     "bias": 1.66,
+     "reward": 1.535
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.896,
+     "water": 103.25,
+     "stress": 0.424,
+     "reads": 0.9,
+     "rmse": 13.047,
+     "bias": 2.547,
+     "reward": 3.134
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.709,
+     "water": 94.0,
+     "stress": 1.026,
+     "reads": 10.0,
+     "rmse": 12.979,
+     "bias": 2.971,
+     "reward": 0.952
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.896,
+     "water": 101.75,
+     "stress": 0.424,
+     "reads": 0.9,
+     "rmse": 13.01,
+     "bias": 2.707,
+     "reward": 3.149
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.015,
+   "drift_std_m3m3": 0.012,
+   "fault_mean_objective": 2.2612,
+   "nominal_mean_objective": 2.309,
+   "end_of_season_offset_std_m3m3": 0.1428,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.782,
+     "water": 98.0,
+     "stress": 0.777,
+     "reads": 10.0,
+     "rmse": 12.515,
+     "bias": 2.42,
+     "reward": 1.481
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.896,
+     "water": 103.0,
+     "stress": 0.424,
+     "reads": 0.9,
+     "rmse": 13.04,
+     "bias": 2.593,
+     "reward": 3.137
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.806,
+     "water": 100.0,
+     "stress": 0.707,
+     "reads": 10.0,
+     "rmse": 12.552,
+     "bias": 2.285,
+     "reward": 1.611
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.896,
+     "water": 103.25,
+     "stress": 0.424,
+     "reads": 0.85,
+     "rmse": 13.028,
+     "bias": 2.639,
+     "reward": 3.139
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.748,
+     "water": 95.0,
+     "stress": 1.051,
+     "reads": 10.0,
+     "rmse": 12.47,
+     "bias": 3.2,
+     "reward": 1.332
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.896,
+     "water": 101.75,
+     "stress": 0.424,
+     "reads": 0.9,
+     "rmse": 13.041,
+     "bias": 2.627,
+     "reward": 3.149
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.799,
+     "water": 102.0,
+     "stress": 0.661,
+     "reads": 10.0,
+     "rmse": 12.756,
+     "bias": 1.695,
+     "reward": 1.537
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.896,
+     "water": 103.25,
+     "stress": 0.424,
+     "reads": 0.9,
+     "rmse": 13.048,
+     "bias": 2.552,
+     "reward": 3.134
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.707,
+     "water": 94.0,
+     "stress": 1.04,
+     "reads": 10.0,
+     "rmse": 13.021,
+     "bias": 2.945,
+     "reward": 0.943
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.896,
+     "water": 101.75,
+     "stress": 0.424,
+     "reads": 0.9,
+     "rmse": 13.01,
+     "bias": 2.709,
+     "reward": 3.149
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.01,
+   "drift_std_m3m3": 0.008,
+   "fault_mean_objective": 2.2108,
+   "nominal_mean_objective": 2.3065,
+   "end_of_season_offset_std_m3m3": 0.0952,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.789,
+     "water": 100.0,
+     "stress": 0.747,
+     "reads": 10.0,
+     "rmse": 12.393,
+     "bias": 2.334,
+     "reward": 1.5
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.904,
+     "water": 102.25,
+     "stress": 0.351,
+     "reads": 1.85,
+     "rmse": 12.774,
+     "bias": 2.486,
+     "reward": 3.113
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.814,
+     "water": 100.0,
+     "stress": 0.664,
+     "reads": 10.0,
+     "rmse": 12.421,
+     "bias": 2.129,
+     "reward": 1.664
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.904,
+     "water": 102.5,
+     "stress": 0.396,
+     "reads": 1.45,
+     "rmse": 12.854,
+     "bias": 2.587,
+     "reward": 3.151
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.738,
+     "water": 94.0,
+     "stress": 1.139,
+     "reads": 10.0,
+     "rmse": 12.342,
+     "bias": 3.438,
+     "reward": 1.26
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.89,
+     "water": 100.75,
+     "stress": 0.427,
+     "reads": 1.9,
+     "rmse": 12.738,
+     "bias": 2.722,
+     "reward": 3.035
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.809,
+     "water": 106.0,
+     "stress": 0.625,
+     "reads": 10.0,
+     "rmse": 12.71,
+     "bias": 1.157,
+     "reward": 1.561
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.916,
+     "water": 105.5,
+     "stress": 0.298,
+     "reads": 2.05,
+     "rmse": 12.644,
+     "bias": 2.116,
+     "reward": 3.153
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.66,
+     "water": 90.0,
+     "stress": 1.179,
+     "reads": 10.0,
+     "rmse": 13.197,
+     "bias": 3.212,
+     "reward": 0.638
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.891,
+     "water": 99.75,
+     "stress": 0.397,
+     "reads": 1.85,
+     "rmse": 12.945,
+     "bias": 2.812,
+     "reward": 3.033
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.015,
+   "drift_std_m3m3": 0.008,
+   "fault_mean_objective": 2.1989,
+   "nominal_mean_objective": 2.2925,
+   "end_of_season_offset_std_m3m3": 0.0958,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.793,
+     "water": 101.0,
+     "stress": 0.738,
+     "reads": 10.0,
+     "rmse": 12.415,
+     "bias": 2.227,
+     "reward": 1.521
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.898,
+     "water": 102.0,
+     "stress": 0.415,
+     "reads": 1.95,
+     "rmse": 12.798,
+     "bias": 2.507,
+     "reward": 3.064
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.813,
+     "water": 101.0,
+     "stress": 0.686,
+     "reads": 10.0,
+     "rmse": 12.464,
+     "bias": 2.12,
+     "reward": 1.65
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.904,
+     "water": 102.25,
+     "stress": 0.396,
+     "reads": 1.4,
+     "rmse": 12.895,
+     "bias": 2.62,
+     "reward": 3.158
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.742,
+     "water": 95.0,
+     "stress": 1.101,
+     "reads": 10.0,
+     "rmse": 12.344,
+     "bias": 3.277,
+     "reward": 1.274
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.89,
+     "water": 100.25,
+     "stress": 0.443,
+     "reads": 2.0,
+     "rmse": 12.816,
+     "bias": 2.77,
+     "reward": 3.019
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.808,
+     "water": 105.0,
+     "stress": 0.632,
+     "reads": 10.0,
+     "rmse": 12.691,
+     "bias": 1.236,
+     "reward": 1.566
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.909,
+     "water": 103.5,
+     "stress": 0.378,
+     "reads": 2.1,
+     "rmse": 12.827,
+     "bias": 2.182,
+     "reward": 3.118
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.662,
+     "water": 92.0,
+     "stress": 1.176,
+     "reads": 10.0,
+     "rmse": 13.211,
+     "bias": 3.183,
+     "reward": 0.638
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.885,
+     "water": 99.5,
+     "stress": 0.461,
+     "reads": 2.0,
+     "rmse": 12.925,
+     "bias": 2.8,
+     "reward": 2.981
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.01,
+   "drift_std_m3m3": 0.005,
+   "fault_mean_objective": 2.1452,
+   "nominal_mean_objective": 2.292,
+   "end_of_season_offset_std_m3m3": 0.06,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.789,
+     "water": 101.0,
+     "stress": 0.76,
+     "reads": 10.0,
+     "rmse": 12.186,
+     "bias": 2.124,
+     "reward": 1.465
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.926,
+     "water": 102.0,
+     "stress": 0.29,
+     "reads": 3.45,
+     "rmse": 12.522,
+     "bias": 2.398,
+     "reward": 3.119
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.817,
+     "water": 101.0,
+     "stress": 0.68,
+     "reads": 10.0,
+     "rmse": 12.259,
+     "bias": 1.946,
+     "reward": 1.667
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.923,
+     "water": 102.0,
+     "stress": 0.306,
+     "reads": 3.0,
+     "rmse": 12.647,
+     "bias": 2.502,
+     "reward": 3.15
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.72,
+     "water": 93.0,
+     "stress": 1.219,
+     "reads": 10.0,
+     "rmse": 12.288,
+     "bias": 3.928,
+     "reward": 1.125
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.87,
+     "water": 95.5,
+     "stress": 0.539,
+     "reads": 3.45,
+     "rmse": 12.923,
+     "bias": 3.466,
+     "reward": 2.799
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.84,
+     "water": 109.0,
+     "stress": 0.534,
+     "reads": 10.0,
+     "rmse": 12.514,
+     "bias": 0.471,
+     "reward": 1.749
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.948,
+     "water": 107.25,
+     "stress": 0.202,
+     "reads": 3.2,
+     "rmse": 12.5,
+     "bias": 1.607,
+     "reward": 3.254
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.599,
+     "water": 91.0,
+     "stress": 1.367,
+     "reads": 10.0,
+     "rmse": 13.038,
+     "bias": 3.192,
+     "reward": 0.173
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.894,
+     "water": 97.75,
+     "stress": 0.401,
+     "reads": 3.2,
+     "rmse": 12.945,
+     "bias": 3.007,
+     "reward": 2.951
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.015,
+   "drift_std_m3m3": 0.005,
+   "fault_mean_objective": 2.1369,
+   "nominal_mean_objective": 2.291,
+   "end_of_season_offset_std_m3m3": 0.061,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.788,
+     "water": 101.0,
+     "stress": 0.779,
+     "reads": 10.0,
+     "rmse": 12.282,
+     "bias": 2.063,
+     "reward": 1.471
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.923,
+     "water": 101.75,
+     "stress": 0.301,
+     "reads": 3.35,
+     "rmse": 12.608,
+     "bias": 2.307,
+     "reward": 3.111
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.813,
+     "water": 101.0,
+     "stress": 0.696,
+     "reads": 10.0,
+     "rmse": 12.378,
+     "bias": 1.929,
+     "reward": 1.645
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.922,
+     "water": 100.75,
+     "stress": 0.316,
+     "reads": 3.1,
+     "rmse": 12.76,
+     "bias": 2.509,
+     "reward": 3.141
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.725,
+     "water": 93.0,
+     "stress": 1.158,
+     "reads": 10.0,
+     "rmse": 12.329,
+     "bias": 3.601,
+     "reward": 1.157
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.87,
+     "water": 96.0,
+     "stress": 0.513,
+     "reads": 3.3,
+     "rmse": 12.922,
+     "bias": 3.179,
+     "reward": 2.81
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.834,
+     "water": 107.0,
+     "stress": 0.565,
+     "reads": 10.0,
+     "rmse": 12.661,
+     "bias": 0.554,
+     "reward": 1.713
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.94,
+     "water": 107.25,
+     "stress": 0.221,
+     "reads": 3.2,
+     "rmse": 12.582,
+     "bias": 1.722,
+     "reward": 3.197
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.603,
+     "water": 91.0,
+     "stress": 1.373,
+     "reads": 10.0,
+     "rmse": 13.066,
+     "bias": 3.109,
+     "reward": 0.238
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.886,
+     "water": 97.0,
+     "stress": 0.431,
+     "reads": 3.3,
+     "rmse": 13.04,
+     "bias": 3.026,
+     "reward": 2.886
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.02,
+   "drift_std_m3m3": 0.005,
+   "fault_mean_objective": 2.1289,
+   "nominal_mean_objective": 2.2225,
+   "end_of_season_offset_std_m3m3": 0.0624,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.783,
+     "water": 102.0,
+     "stress": 0.794,
+     "reads": 10.0,
+     "rmse": 12.369,
+     "bias": 2.058,
+     "reward": 1.414
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.912,
+     "water": 101.0,
+     "stress": 0.327,
+     "reads": 3.4,
+     "rmse": 12.829,
+     "bias": 2.386,
+     "reward": 3.031
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.81,
+     "water": 102.0,
+     "stress": 0.726,
+     "reads": 10.0,
+     "rmse": 12.486,
+     "bias": 1.947,
+     "reward": 1.623
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.921,
+     "water": 100.25,
+     "stress": 0.322,
+     "reads": 2.95,
+     "rmse": 12.838,
+     "bias": 2.531,
+     "reward": 3.151
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.735,
+     "water": 94.0,
+     "stress": 1.102,
+     "reads": 10.0,
+     "rmse": 12.397,
+     "bias": 3.304,
+     "reward": 1.212
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.876,
+     "water": 96.25,
+     "stress": 0.477,
+     "reads": 3.4,
+     "rmse": 12.933,
+     "bias": 3.072,
+     "reward": 2.843
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.821,
+     "water": 105.0,
+     "stress": 0.605,
+     "reads": 10.0,
+     "rmse": 12.694,
+     "bias": 0.695,
+     "reward": 1.649
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.949,
+     "water": 107.5,
+     "stress": 0.195,
+     "reads": 3.25,
+     "rmse": 12.597,
+     "bias": 1.695,
+     "reward": 3.25
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.604,
+     "water": 93.0,
+     "stress": 1.365,
+     "reads": 10.0,
+     "rmse": 13.085,
+     "bias": 3.016,
+     "reward": 0.225
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.888,
+     "water": 98.0,
+     "stress": 0.415,
+     "reads": 3.3,
+     "rmse": 13.445,
+     "bias": 2.767,
+     "reward": 2.891
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.03,
+   "drift_std_m3m3": 0.005,
+   "fault_mean_objective": 2.1236,
+   "nominal_mean_objective": 2.2295,
+   "end_of_season_offset_std_m3m3": 0.0663,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.781,
+     "water": 102.0,
+     "stress": 0.812,
+     "reads": 10.0,
+     "rmse": 12.552,
+     "bias": 1.997,
+     "reward": 1.41
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.91,
+     "water": 99.75,
+     "stress": 0.381,
+     "reads": 3.2,
+     "rmse": 12.904,
+     "bias": 2.41,
+     "reward": 3.049
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.804,
+     "water": 102.0,
+     "stress": 0.764,
+     "reads": 10.0,
+     "rmse": 12.705,
+     "bias": 1.94,
+     "reward": 1.598
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.921,
+     "water": 100.25,
+     "stress": 0.342,
+     "reads": 2.75,
+     "rmse": 12.856,
+     "bias": 2.508,
+     "reward": 3.174
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.744,
+     "water": 97.0,
+     "stress": 1.021,
+     "reads": 10.0,
+     "rmse": 12.541,
+     "bias": 2.738,
+     "reward": 1.248
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.893,
+     "water": 98.5,
+     "stress": 0.427,
+     "reads": 3.2,
+     "rmse": 12.818,
+     "bias": 2.795,
+     "reward": 2.947
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.808,
+     "water": 105.0,
+     "stress": 0.655,
+     "reads": 10.0,
+     "rmse": 12.749,
+     "bias": 1.128,
+     "reward": 1.554
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.929,
+     "water": 104.5,
+     "stress": 0.316,
+     "reads": 3.15,
+     "rmse": 12.774,
+     "bias": 1.991,
+     "reward": 3.146
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.602,
+     "water": 93.0,
+     "stress": 1.387,
+     "reads": 10.0,
+     "rmse": 13.258,
+     "bias": 2.928,
+     "reward": 0.211
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.886,
+     "water": 97.25,
+     "stress": 0.453,
+     "reads": 3.2,
+     "rmse": 12.997,
+     "bias": 2.827,
+     "reward": 2.899
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.03,
+   "drift_std_m3m3": 0.003,
+   "fault_mean_objective": 2.0599,
+   "nominal_mean_objective": 2.27,
+   "end_of_season_offset_std_m3m3": 0.0465,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.784,
+     "water": 100.0,
+     "stress": 0.793,
+     "reads": 10.0,
+     "rmse": 12.545,
+     "bias": 1.716,
+     "reward": 1.464
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.916,
+     "water": 100.25,
+     "stress": 0.313,
+     "reads": 3.5,
+     "rmse": 12.623,
+     "bias": 2.404,
+     "reward": 3.076
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.815,
+     "water": 100.0,
+     "stress": 0.741,
+     "reads": 10.0,
+     "rmse": 12.641,
+     "bias": 1.621,
+     "reward": 1.692
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.938,
+     "water": 100.75,
+     "stress": 0.287,
+     "reads": 3.1,
+     "rmse": 12.651,
+     "bias": 2.474,
+     "reward": 3.264
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.746,
+     "water": 97.0,
+     "stress": 1.01,
+     "reads": 10.0,
+     "rmse": 12.651,
+     "bias": 2.913,
+     "reward": 1.243
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.865,
+     "water": 96.5,
+     "stress": 0.513,
+     "reads": 3.3,
+     "rmse": 12.782,
+     "bias": 3.077,
+     "reward": 2.746
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.816,
+     "water": 105.0,
+     "stress": 0.639,
+     "reads": 10.0,
+     "rmse": 12.75,
+     "bias": 0.529,
+     "reward": 1.605
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.946,
+     "water": 106.5,
+     "stress": 0.222,
+     "reads": 3.35,
+     "rmse": 12.481,
+     "bias": 1.516,
+     "reward": 3.237
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.516,
+     "water": 86.0,
+     "stress": 1.67,
+     "reads": 10.0,
+     "rmse": 13.534,
+     "bias": 2.96,
+     "reward": -0.343
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.842,
+     "water": 94.0,
+     "stress": 0.547,
+     "reads": 3.25,
+     "rmse": 13.228,
+     "bias": 3.222,
+     "reward": 2.615
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.015,
+   "drift_std_m3m3": 0.003,
+   "fault_mean_objective": 2.0403,
+   "nominal_mean_objective": 2.3135,
+   "end_of_season_offset_std_m3m3": 0.0385,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.792,
+     "water": 101.0,
+     "stress": 0.753,
+     "reads": 10.0,
+     "rmse": 12.095,
+     "bias": 1.894,
+     "reward": 1.501
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.931,
+     "water": 100.75,
+     "stress": 0.274,
+     "reads": 3.85,
+     "rmse": 12.209,
+     "bias": 2.149,
+     "reward": 3.126
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.835,
+     "water": 101.0,
+     "stress": 0.652,
+     "reads": 10.0,
+     "rmse": 12.277,
+     "bias": 1.772,
+     "reward": 1.813
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.918,
+     "water": 99.75,
+     "stress": 0.334,
+     "reads": 3.55,
+     "rmse": 12.471,
+     "bias": 2.389,
+     "reward": 3.065
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.704,
+     "water": 93.0,
+     "stress": 1.24,
+     "reads": 10.0,
+     "rmse": 12.263,
+     "bias": 4.291,
+     "reward": 0.983
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.825,
+     "water": 90.75,
+     "stress": 0.698,
+     "reads": 4.0,
+     "rmse": 12.903,
+     "bias": 3.937,
+     "reward": 2.436
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.85,
+     "water": 110.0,
+     "stress": 0.512,
+     "reads": 10.0,
+     "rmse": 12.505,
+     "bias": -0.325,
+     "reward": 1.797
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.974,
+     "water": 109.5,
+     "stress": 0.106,
+     "reads": 3.6,
+     "rmse": 12.149,
+     "bias": 0.886,
+     "reward": 3.372
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.53,
+     "water": 87.0,
+     "stress": 1.611,
+     "reads": 10.0,
+     "rmse": 13.317,
+     "bias": 3.213,
+     "reward": -0.26
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.846,
+     "water": 94.5,
+     "stress": 0.552,
+     "reads": 3.85,
+     "rmse": 12.961,
+     "bias": 2.925,
+     "reward": 2.57
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.02,
+   "drift_std_m3m3": 0.003,
+   "fault_mean_objective": 2.0245,
+   "nominal_mean_objective": 2.2705,
+   "end_of_season_offset_std_m3m3": 0.0407,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.786,
+     "water": 101.0,
+     "stress": 0.777,
+     "reads": 10.0,
+     "rmse": 12.28,
+     "bias": 1.822,
+     "reward": 1.47
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.925,
+     "water": 101.0,
+     "stress": 0.299,
+     "reads": 3.9,
+     "rmse": 12.353,
+     "bias": 2.301,
+     "reward": 3.071
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.828,
+     "water": 101.0,
+     "stress": 0.676,
+     "reads": 10.0,
+     "rmse": 12.543,
+     "bias": 1.761,
+     "reward": 1.773
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.913,
+     "water": 100.25,
+     "stress": 0.345,
+     "reads": 3.65,
+     "rmse": 12.475,
+     "bias": 2.371,
+     "reward": 3.011
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.722,
+     "water": 94.0,
+     "stress": 1.158,
+     "reads": 10.0,
+     "rmse": 12.408,
+     "bias": 3.764,
+     "reward": 1.101
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.842,
+     "water": 92.75,
+     "stress": 0.641,
+     "reads": 3.55,
+     "rmse": 12.844,
+     "bias": 3.462,
+     "reward": 2.578
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.841,
+     "water": 107.0,
+     "stress": 0.545,
+     "reads": 10.0,
+     "rmse": 12.683,
+     "bias": -0.041,
+     "reward": 1.764
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.959,
+     "water": 107.5,
+     "stress": 0.163,
+     "reads": 3.75,
+     "rmse": 12.247,
+     "bias": 1.108,
+     "reward": 3.264
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.518,
+     "water": 87.0,
+     "stress": 1.654,
+     "reads": 10.0,
+     "rmse": 13.327,
+     "bias": 3.048,
+     "reward": -0.336
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.845,
+     "water": 97.0,
+     "stress": 0.546,
+     "reads": 3.7,
+     "rmse": 12.835,
+     "bias": 2.757,
+     "reward": 2.549
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.01,
+   "drift_std_m3m3": 0.003,
+   "fault_mean_objective": 2.0217,
+   "nominal_mean_objective": 2.2685,
+   "end_of_season_offset_std_m3m3": 0.0369,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.796,
+     "water": 102.0,
+     "stress": 0.738,
+     "reads": 10.0,
+     "rmse": 11.982,
+     "bias": 1.988,
+     "reward": 1.512
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.918,
+     "water": 100.5,
+     "stress": 0.309,
+     "reads": 3.95,
+     "rmse": 12.171,
+     "bias": 2.421,
+     "reward": 3.025
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.836,
+     "water": 102.0,
+     "stress": 0.624,
+     "reads": 10.0,
+     "rmse": 12.112,
+     "bias": 1.85,
+     "reward": 1.811
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.903,
+     "water": 100.0,
+     "stress": 0.378,
+     "reads": 3.5,
+     "rmse": 12.359,
+     "bias": 2.494,
+     "reward": 2.945
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.682,
+     "water": 90.0,
+     "stress": 1.372,
+     "reads": 10.0,
+     "rmse": 12.267,
+     "bias": 4.87,
+     "reward": 0.85
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.813,
+     "water": 90.0,
+     "stress": 0.74,
+     "reads": 3.95,
+     "rmse": 12.892,
+     "bias": 4.237,
+     "reward": 2.374
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.872,
+     "water": 114.0,
+     "stress": 0.42,
+     "reads": 10.0,
+     "rmse": 12.278,
+     "bias": -0.666,
+     "reward": 1.923
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.977,
+     "water": 110.75,
+     "stress": 0.097,
+     "reads": 3.8,
+     "rmse": 12.119,
+     "bias": 0.65,
+     "reward": 3.362
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.525,
+     "water": 87.0,
+     "stress": 1.622,
+     "reads": 10.0,
+     "rmse": 13.36,
+     "bias": 3.342,
+     "reward": -0.299
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.869,
+     "water": 96.75,
+     "stress": 0.475,
+     "reads": 3.85,
+     "rmse": 12.663,
+     "bias": 2.885,
+     "reward": 2.714
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.02,
+   "drift_std_m3m3": 0.002,
+   "fault_mean_objective": 2.0092,
+   "nominal_mean_objective": 2.309,
+   "end_of_season_offset_std_m3m3": 0.031,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.792,
+     "water": 100.0,
+     "stress": 0.765,
+     "reads": 10.0,
+     "rmse": 12.198,
+     "bias": 1.654,
+     "reward": 1.516
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.927,
+     "water": 100.75,
+     "stress": 0.293,
+     "reads": 3.7,
+     "rmse": 12.165,
+     "bias": 2.349,
+     "reward": 3.102
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.833,
+     "water": 103.0,
+     "stress": 0.671,
+     "reads": 10.0,
+     "rmse": 12.424,
+     "bias": 1.624,
+     "reward": 1.794
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.912,
+     "water": 100.75,
+     "stress": 0.354,
+     "reads": 3.65,
+     "rmse": 12.448,
+     "bias": 2.435,
+     "reward": 2.981
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.713,
+     "water": 93.0,
+     "stress": 1.177,
+     "reads": 10.0,
+     "rmse": 12.38,
+     "bias": 4.066,
+     "reward": 1.036
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.84,
+     "water": 90.25,
+     "stress": 0.625,
+     "reads": 3.8,
+     "rmse": 13.024,
+     "bias": 3.961,
+     "reward": 2.585
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.857,
+     "water": 110.0,
+     "stress": 0.493,
+     "reads": 10.0,
+     "rmse": 12.457,
+     "bias": -0.44,
+     "reward": 1.854
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.972,
+     "water": 110.5,
+     "stress": 0.116,
+     "reads": 3.65,
+     "rmse": 11.961,
+     "bias": 0.685,
+     "reward": 3.34
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.481,
+     "water": 84.0,
+     "stress": 1.812,
+     "reads": 10.0,
+     "rmse": 13.429,
+     "bias": 3.138,
+     "reward": -0.613
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.841,
+     "water": 96.75,
+     "stress": 0.569,
+     "reads": 3.85,
+     "rmse": 12.888,
+     "bias": 3.07,
+     "reward": 2.497
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.02,
+   "drift_std_m3m3": 0.001,
+   "fault_mean_objective": 1.9787,
+   "nominal_mean_objective": 2.302,
+   "end_of_season_offset_std_m3m3": 0.0232,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.796,
+     "water": 100.0,
+     "stress": 0.757,
+     "reads": 10.0,
+     "rmse": 12.198,
+     "bias": 1.558,
+     "reward": 1.534
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.924,
+     "water": 100.25,
+     "stress": 0.297,
+     "reads": 3.95,
+     "rmse": 11.817,
+     "bias": 2.202,
+     "reward": 3.07
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.841,
+     "water": 104.0,
+     "stress": 0.643,
+     "reads": 10.0,
+     "rmse": 12.427,
+     "bias": 1.514,
+     "reward": 1.849
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.942,
+     "water": 100.5,
+     "stress": 0.247,
+     "reads": 3.75,
+     "rmse": 12.1,
+     "bias": 2.433,
+     "reward": 3.22
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.697,
+     "water": 91.0,
+     "stress": 1.223,
+     "reads": 10.0,
+     "rmse": 12.394,
+     "bias": 4.33,
+     "reward": 0.948
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.795,
+     "water": 86.75,
+     "stress": 0.789,
+     "reads": 4.0,
+     "rmse": 12.951,
+     "bias": 4.437,
+     "reward": 2.252
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.872,
+     "water": 114.0,
+     "stress": 0.446,
+     "reads": 10.0,
+     "rmse": 12.226,
+     "bias": -0.87,
+     "reward": 1.924
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.982,
+     "water": 112.25,
+     "stress": 0.082,
+     "reads": 3.85,
+     "rmse": 12.202,
+     "bias": 0.535,
+     "reward": 3.378
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.445,
+     "water": 80.0,
+     "stress": 1.937,
+     "reads": 10.0,
+     "rmse": 13.659,
+     "bias": 3.251,
+     "reward": -0.83
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.83,
+     "water": 95.5,
+     "stress": 0.607,
+     "reads": 3.8,
+     "rmse": 12.857,
+     "bias": 3.124,
+     "reward": 2.442
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.015,
+   "drift_std_m3m3": 0.002,
+   "fault_mean_objective": 1.9618,
+   "nominal_mean_objective": 2.248,
+   "end_of_season_offset_std_m3m3": 0.028,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.791,
+     "water": 101.0,
+     "stress": 0.761,
+     "reads": 10.0,
+     "rmse": 12.014,
+     "bias": 1.778,
+     "reward": 1.484
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.916,
+     "water": 99.25,
+     "stress": 0.317,
+     "reads": 4.0,
+     "rmse": 12.009,
+     "bias": 2.316,
+     "reward": 3.012
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.837,
+     "water": 104.0,
+     "stress": 0.641,
+     "reads": 10.0,
+     "rmse": 12.176,
+     "bias": 1.587,
+     "reward": 1.804
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.921,
+     "water": 100.0,
+     "stress": 0.302,
+     "reads": 3.65,
+     "rmse": 12.107,
+     "bias": 2.313,
+     "reward": 3.085
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.688,
+     "water": 91.0,
+     "stress": 1.293,
+     "reads": 10.0,
+     "rmse": 12.303,
+     "bias": 4.816,
+     "reward": 0.886
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.781,
+     "water": 88.5,
+     "stress": 0.843,
+     "reads": 4.0,
+     "rmse": 13.104,
+     "bias": 4.531,
+     "reward": 2.149
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.874,
+     "water": 114.0,
+     "stress": 0.432,
+     "reads": 10.0,
+     "rmse": 12.107,
+     "bias": -0.849,
+     "reward": 1.941
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.976,
+     "water": 112.5,
+     "stress": 0.103,
+     "reads": 3.9,
+     "rmse": 11.971,
+     "bias": 0.467,
+     "reward": 3.329
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.487,
+     "water": 84.0,
+     "stress": 1.777,
+     "reads": 10.0,
+     "rmse": 13.416,
+     "bias": 3.382,
+     "reward": -0.572
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.839,
+     "water": 95.5,
+     "stress": 0.58,
+     "reads": 3.95,
+     "rmse": 12.77,
+     "bias": 2.892,
+     "reward": 2.5
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.03,
+   "drift_std_m3m3": 0.002,
+   "fault_mean_objective": 1.9613,
+   "nominal_mean_objective": 2.2595,
+   "end_of_season_offset_std_m3m3": 0.0382,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.785,
+     "water": 100.0,
+     "stress": 0.796,
+     "reads": 10.0,
+     "rmse": 12.592,
+     "bias": 1.617,
+     "reward": 1.458
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.919,
+     "water": 100.75,
+     "stress": 0.31,
+     "reads": 3.7,
+     "rmse": 12.428,
+     "bias": 2.277,
+     "reward": 3.061
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.829,
+     "water": 101.0,
+     "stress": 0.696,
+     "reads": 10.0,
+     "rmse": 12.718,
+     "bias": 1.503,
+     "reward": 1.796
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.905,
+     "water": 99.25,
+     "stress": 0.408,
+     "reads": 3.65,
+     "rmse": 12.718,
+     "bias": 2.478,
+     "reward": 2.975
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.737,
+     "water": 97.0,
+     "stress": 1.049,
+     "reads": 10.0,
+     "rmse": 12.653,
+     "bias": 3.005,
+     "reward": 1.181
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.841,
+     "water": 93.75,
+     "stress": 0.605,
+     "reads": 3.5,
+     "rmse": 12.998,
+     "bias": 3.386,
+     "reward": 2.544
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.832,
+     "water": 107.0,
+     "stress": 0.589,
+     "reads": 10.0,
+     "rmse": 12.624,
+     "bias": 0.381,
+     "reward": 1.701
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.964,
+     "water": 106.5,
+     "stress": 0.162,
+     "reads": 3.65,
+     "rmse": 12.312,
+     "bias": 1.158,
+     "reward": 3.322
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.475,
+     "water": 84.0,
+     "stress": 1.84,
+     "reads": 10.0,
+     "rmse": 13.704,
+     "bias": 3.11,
+     "reward": -0.663
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.795,
+     "water": 93.5,
+     "stress": 0.699,
+     "reads": 3.5,
+     "rmse": 13.29,
+     "bias": 3.302,
+     "reward": 2.238
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.02,
+   "drift_std_m3m3": 0.0,
+   "fault_mean_objective": 1.9567,
+   "nominal_mean_objective": 2.321,
+   "end_of_season_offset_std_m3m3": 0.02,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.797,
+     "water": 102.0,
+     "stress": 0.753,
+     "reads": 10.0,
+     "rmse": 12.18,
+     "bias": 1.545,
+     "reward": 1.524
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.933,
+     "water": 100.75,
+     "stress": 0.272,
+     "reads": 4.0,
+     "rmse": 11.796,
+     "bias": 2.207,
+     "reward": 3.118
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.841,
+     "water": 105.0,
+     "stress": 0.643,
+     "reads": 10.0,
+     "rmse": 12.407,
+     "bias": 1.494,
+     "reward": 1.839
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.933,
+     "water": 100.75,
+     "stress": 0.28,
+     "reads": 3.7,
+     "rmse": 12.187,
+     "bias": 2.451,
+     "reward": 3.154
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.695,
+     "water": 91.0,
+     "stress": 1.25,
+     "reads": 10.0,
+     "rmse": 12.422,
+     "bias": 4.507,
+     "reward": 0.919
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.793,
+     "water": 87.0,
+     "stress": 0.77,
+     "reads": 3.85,
+     "rmse": 12.924,
+     "bias": 4.525,
+     "reward": 2.258
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.877,
+     "water": 117.0,
+     "stress": 0.422,
+     "reads": 10.0,
+     "rmse": 11.994,
+     "bias": -1.23,
+     "reward": 1.947
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.983,
+     "water": 113.25,
+     "stress": 0.083,
+     "reads": 3.9,
+     "rmse": 12.067,
+     "bias": 0.35,
+     "reward": 3.366
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.422,
+     "water": 79.0,
+     "stress": 1.997,
+     "reads": 10.0,
+     "rmse": 13.949,
+     "bias": 3.37,
+     "reward": -0.973
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.827,
+     "water": 93.75,
+     "stress": 0.613,
+     "reads": 4.0,
+     "rmse": 12.701,
+     "bias": 3.366,
+     "reward": 2.415
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.015,
+   "drift_std_m3m3": 0.001,
+   "fault_mean_objective": 1.9434,
+   "nominal_mean_objective": 2.334,
+   "end_of_season_offset_std_m3m3": 0.0191,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.808,
+     "water": 103.0,
+     "stress": 0.711,
+     "reads": 10.0,
+     "rmse": 11.845,
+     "bias": 1.692,
+     "reward": 1.579
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.923,
+     "water": 98.5,
+     "stress": 0.295,
+     "reads": 3.85,
+     "rmse": 11.805,
+     "bias": 2.425,
+     "reward": 3.089
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.844,
+     "water": 104.0,
+     "stress": 0.614,
+     "reads": 10.0,
+     "rmse": 12.039,
+     "bias": 1.532,
+     "reward": 1.866
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.911,
+     "water": 99.5,
+     "stress": 0.338,
+     "reads": 3.65,
+     "rmse": 11.869,
+     "bias": 2.411,
+     "reward": 3.014
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.657,
+     "water": 89.0,
+     "stress": 1.39,
+     "reads": 10.0,
+     "rmse": 12.324,
+     "bias": 5.408,
+     "reward": 0.682
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.757,
+     "water": 86.0,
+     "stress": 0.906,
+     "reads": 3.9,
+     "rmse": 12.991,
+     "bias": 4.773,
+     "reward": 2.011
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.903,
+     "water": 122.0,
+     "stress": 0.321,
+     "reads": 10.0,
+     "rmse": 11.846,
+     "bias": -1.41,
+     "reward": 2.095
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.983,
+     "water": 115.25,
+     "stress": 0.082,
+     "reads": 3.8,
+     "rmse": 11.966,
+     "bias": 0.066,
+     "reward": 3.365
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.45,
+     "water": 82.0,
+     "stress": 1.877,
+     "reads": 10.0,
+     "rmse": 13.958,
+     "bias": 3.776,
+     "reward": -0.804
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.844,
+     "water": 95.0,
+     "stress": 0.551,
+     "reads": 3.95,
+     "rmse": 12.532,
+     "bias": 3.003,
+     "reward": 2.537
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.01,
+   "drift_std_m3m3": 0.002,
+   "fault_mean_objective": 1.9426,
+   "nominal_mean_objective": 2.264,
+   "end_of_season_offset_std_m3m3": 0.0257,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.797,
+     "water": 104.0,
+     "stress": 0.742,
+     "reads": 10.0,
+     "rmse": 11.688,
+     "bias": 1.932,
+     "reward": 1.498
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.918,
+     "water": 99.25,
+     "stress": 0.302,
+     "reads": 3.9,
+     "rmse": 11.906,
+     "bias": 2.557,
+     "reward": 3.03
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.85,
+     "water": 104.0,
+     "stress": 0.575,
+     "reads": 10.0,
+     "rmse": 11.831,
+     "bias": 1.654,
+     "reward": 1.9
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.903,
+     "water": 102.0,
+     "stress": 0.366,
+     "reads": 3.8,
+     "rmse": 11.886,
+     "bias": 2.355,
+     "reward": 2.904
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.65,
+     "water": 86.0,
+     "stress": 1.454,
+     "reads": 10.0,
+     "rmse": 12.4,
+     "bias": 5.731,
+     "reward": 0.683
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.761,
+     "water": 85.0,
+     "stress": 0.899,
+     "reads": 4.25,
+     "rmse": 13.09,
+     "bias": 4.822,
+     "reward": 2.022
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.901,
+     "water": 119.0,
+     "stress": 0.325,
+     "reads": 10.0,
+     "rmse": 12.037,
+     "bias": -1.425,
+     "reward": 2.092
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.979,
+     "water": 113.75,
+     "stress": 0.092,
+     "reads": 4.05,
+     "rmse": 12.004,
+     "bias": 0.055,
+     "reward": 3.318
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.488,
+     "water": 83.0,
+     "stress": 1.775,
+     "reads": 10.0,
+     "rmse": 13.527,
+     "bias": 3.814,
+     "reward": -0.556
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.843,
+     "water": 94.25,
+     "stress": 0.543,
+     "reads": 3.95,
+     "rmse": 12.491,
+     "bias": 3.179,
+     "reward": 2.535
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.03,
+   "drift_std_m3m3": 0.001,
+   "fault_mean_objective": 1.9279,
+   "nominal_mean_objective": 2.278,
+   "end_of_season_offset_std_m3m3": 0.0322,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.79,
+     "water": 100.0,
+     "stress": 0.777,
+     "reads": 10.0,
+     "rmse": 12.478,
+     "bias": 1.596,
+     "reward": 1.494
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.918,
+     "water": 99.25,
+     "stress": 0.326,
+     "reads": 3.7,
+     "rmse": 12.546,
+     "bias": 2.348,
+     "reward": 3.062
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.829,
+     "water": 102.0,
+     "stress": 0.696,
+     "reads": 10.0,
+     "rmse": 12.782,
+     "bias": 1.432,
+     "reward": 1.786
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.891,
+     "water": 98.5,
+     "stress": 0.424,
+     "reads": 3.6,
+     "rmse": 12.868,
+     "bias": 2.602,
+     "reward": 2.888
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.723,
+     "water": 96.0,
+     "stress": 1.098,
+     "reads": 10.0,
+     "rmse": 12.71,
+     "bias": 3.113,
+     "reward": 1.079
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.831,
+     "water": 92.5,
+     "stress": 0.631,
+     "reads": 3.75,
+     "rmse": 13.076,
+     "bias": 3.569,
+     "reward": 2.483
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.839,
+     "water": 112.0,
+     "stress": 0.564,
+     "reads": 10.0,
+     "rmse": 12.514,
+     "bias": 0.219,
+     "reward": 1.713
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.967,
+     "water": 108.0,
+     "stress": 0.143,
+     "reads": 3.8,
+     "rmse": 12.249,
+     "bias": 0.924,
+     "reward": 3.311
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.448,
+     "water": 83.0,
+     "stress": 1.931,
+     "reads": 10.0,
+     "rmse": 13.857,
+     "bias": 3.158,
+     "reward": -0.828
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.807,
+     "water": 94.0,
+     "stress": 0.673,
+     "reads": 3.75,
+     "rmse": 13.115,
+     "bias": 3.118,
+     "reward": 2.291
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.01,
+   "drift_std_m3m3": 0.001,
+   "fault_mean_objective": 1.92,
+   "nominal_mean_objective": 2.414,
+   "end_of_season_offset_std_m3m3": 0.0155,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.825,
+     "water": 104.0,
+     "stress": 0.647,
+     "reads": 10.0,
+     "rmse": 11.329,
+     "bias": 1.861,
+     "reward": 1.716
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.931,
+     "water": 99.75,
+     "stress": 0.261,
+     "reads": 4.0,
+     "rmse": 11.759,
+     "bias": 2.425,
+     "reward": 3.112
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.852,
+     "water": 104.0,
+     "stress": 0.585,
+     "reads": 10.0,
+     "rmse": 11.653,
+     "bias": 1.51,
+     "reward": 1.918
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.908,
+     "water": 98.75,
+     "stress": 0.334,
+     "reads": 3.75,
+     "rmse": 11.765,
+     "bias": 2.342,
+     "reward": 2.985
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.61,
+     "water": 84.0,
+     "stress": 1.592,
+     "reads": 10.0,
+     "rmse": 12.489,
+     "bias": 6.61,
+     "reward": 0.409
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.731,
+     "water": 82.75,
+     "stress": 1.012,
+     "reads": 4.0,
+     "rmse": 13.295,
+     "bias": 5.457,
+     "reward": 1.847
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.939,
+     "water": 128.0,
+     "stress": 0.206,
+     "reads": 10.0,
+     "rmse": 11.936,
+     "bias": -2.607,
+     "reward": 2.277
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.988,
+     "water": 116.5,
+     "stress": 0.063,
+     "reads": 4.05,
+     "rmse": 12.162,
+     "bias": -0.395,
+     "reward": 3.365
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.445,
+     "water": 80.0,
+     "stress": 1.893,
+     "reads": 10.0,
+     "rmse": 13.939,
+     "bias": 4.096,
+     "reward": -0.823
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.824,
+     "water": 93.75,
+     "stress": 0.6,
+     "reads": 4.1,
+     "rmse": 12.566,
+     "bias": 3.313,
+     "reward": 2.394
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.015,
+   "drift_std_m3m3": 0.0,
+   "fault_mean_objective": 1.884,
+   "nominal_mean_objective": 2.336,
+   "end_of_season_offset_std_m3m3": 0.015,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.809,
+     "water": 104.0,
+     "stress": 0.706,
+     "reads": 10.0,
+     "rmse": 11.686,
+     "bias": 1.66,
+     "reward": 1.58
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.927,
+     "water": 99.0,
+     "stress": 0.283,
+     "reads": 4.05,
+     "rmse": 11.778,
+     "bias": 2.367,
+     "reward": 3.092
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.844,
+     "water": 105.0,
+     "stress": 0.614,
+     "reads": 10.0,
+     "rmse": 11.986,
+     "bias": 1.503,
+     "reward": 1.856
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.909,
+     "water": 100.75,
+     "stress": 0.344,
+     "reads": 3.65,
+     "rmse": 11.86,
+     "bias": 2.36,
+     "reward": 2.987
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.643,
+     "water": 88.0,
+     "stress": 1.451,
+     "reads": 10.0,
+     "rmse": 12.353,
+     "bias": 5.593,
+     "reward": 0.594
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.747,
+     "water": 84.0,
+     "stress": 0.944,
+     "reads": 3.8,
+     "rmse": 13.143,
+     "bias": 5.084,
+     "reward": 1.967
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.906,
+     "water": 122.0,
+     "stress": 0.313,
+     "reads": 10.0,
+     "rmse": 11.786,
+     "bias": -1.917,
+     "reward": 2.114
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.987,
+     "water": 117.75,
+     "stress": 0.067,
+     "reads": 3.95,
+     "rmse": 12.097,
+     "bias": -0.201,
+     "reward": 3.349
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.424,
+     "water": 82.0,
+     "stress": 1.944,
+     "reads": 10.0,
+     "rmse": 14.08,
+     "bias": 3.784,
+     "reward": -0.998
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.809,
+     "water": 92.0,
+     "stress": 0.665,
+     "reads": 4.0,
+     "rmse": 12.742,
+     "bias": 3.514,
+     "reward": 2.299
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.03,
+   "drift_std_m3m3": 0.0,
+   "fault_mean_objective": 1.8825,
+   "nominal_mean_objective": 2.253,
+   "end_of_season_offset_std_m3m3": 0.03,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.788,
+     "water": 101.0,
+     "stress": 0.792,
+     "reads": 10.0,
+     "rmse": 12.475,
+     "bias": 1.546,
+     "reward": 1.475
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.915,
+     "water": 100.25,
+     "stress": 0.332,
+     "reads": 3.65,
+     "rmse": 12.519,
+     "bias": 2.317,
+     "reward": 3.031
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.828,
+     "water": 104.0,
+     "stress": 0.709,
+     "reads": 10.0,
+     "rmse": 12.905,
+     "bias": 1.563,
+     "reward": 1.761
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.879,
+     "water": 99.75,
+     "stress": 0.46,
+     "reads": 3.5,
+     "rmse": 12.905,
+     "bias": 2.564,
+     "reward": 2.772
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.72,
+     "water": 95.0,
+     "stress": 1.106,
+     "reads": 10.0,
+     "rmse": 12.729,
+     "bias": 3.158,
+     "reward": 1.07
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.831,
+     "water": 92.5,
+     "stress": 0.617,
+     "reads": 3.65,
+     "rmse": 13.061,
+     "bias": 3.569,
+     "reward": 2.509
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.847,
+     "water": 112.0,
+     "stress": 0.539,
+     "reads": 10.0,
+     "rmse": 12.509,
+     "bias": 0.054,
+     "reward": 1.771
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.968,
+     "water": 108.25,
+     "stress": 0.139,
+     "reads": 3.7,
+     "rmse": 12.281,
+     "bias": 0.931,
+     "reward": 3.325
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.409,
+     "water": 80.0,
+     "stress": 2.065,
+     "reads": 10.0,
+     "rmse": 14.244,
+     "bias": 3.364,
+     "reward": -1.081
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.791,
+     "water": 93.75,
+     "stress": 0.724,
+     "reads": 3.65,
+     "rmse": 13.145,
+     "bias": 3.138,
+     "reward": 2.192
+    }
+   }
+  },
+  {
+   "method": "augmented",
+   "prior_std_m3m3": 0.01,
+   "drift_std_m3m3": 0.0,
+   "fault_mean_objective": 1.8223,
+   "nominal_mean_objective": 2.4635,
+   "end_of_season_offset_std_m3m3": 0.01,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.831,
+     "water": 105.0,
+     "stress": 0.626,
+     "reads": 10.0,
+     "rmse": 11.123,
+     "bias": 1.807,
+     "reward": 1.755
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.939,
+     "water": 101.25,
+     "stress": 0.228,
+     "reads": 3.95,
+     "rmse": 11.525,
+     "bias": 2.453,
+     "reward": 3.172
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.855,
+     "water": 104.0,
+     "stress": 0.577,
+     "reads": 10.0,
+     "rmse": 11.525,
+     "bias": 1.449,
+     "reward": 1.937
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.929,
+     "water": 100.5,
+     "stress": 0.269,
+     "reads": 3.75,
+     "rmse": 11.74,
+     "bias": 2.561,
+     "reward": 3.119
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.578,
+     "water": 82.0,
+     "stress": 1.701,
+     "reads": 10.0,
+     "rmse": 12.718,
+     "bias": 7.1,
+     "reward": 0.179
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.684,
+     "water": 80.25,
+     "stress": 1.156,
+     "reads": 4.15,
+     "rmse": 13.611,
+     "bias": 5.85,
+     "reward": 1.531
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.95,
+     "water": 131.0,
+     "stress": 0.168,
+     "reads": 10.0,
+     "rmse": 12.055,
+     "bias": -3.461,
+     "reward": 2.319
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.991,
+     "water": 119.0,
+     "stress": 0.056,
+     "reads": 4.1,
+     "rmse": 12.531,
+     "bias": -0.789,
+     "reward": 3.349
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.379,
+     "water": 77.0,
+     "stress": 2.125,
+     "reads": 10.0,
+     "rmse": 14.524,
+     "bias": 4.274,
+     "reward": -1.296
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.789,
+     "water": 92.75,
+     "stress": 0.712,
+     "reads": 3.85,
+     "rmse": 13.051,
+     "bias": 3.576,
+     "reward": 2.158
+    }
+   }
+  },
+  {
+   "method": "innovation_monitor",
+   "prior_std_m3m3": null,
+   "drift_std_m3m3": null,
+   "fault_mean_objective": 1.7903,
+   "nominal_mean_objective": 2.547,
+   "end_of_season_offset_std_m3m3": null,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.855,
+     "water": 109.0,
+     "stress": 0.54,
+     "reads": 10.0,
+     "rmse": 10.594,
+     "bias": 1.635,
+     "reward": 1.912
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.939,
+     "water": 98.25,
+     "stress": 0.247,
+     "reads": 4.1,
+     "rmse": 11.312,
+     "bias": 2.364,
+     "reward": 3.182
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.882,
+     "water": 106.0,
+     "stress": 0.466,
+     "reads": 10.0,
+     "rmse": 11.165,
+     "bias": 1.416,
+     "reward": 2.132
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.95,
+     "water": 100.25,
+     "stress": 0.184,
+     "reads": 3.75,
+     "rmse": 11.527,
+     "bias": 2.353,
+     "reward": 3.275
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.52,
+     "water": 80.0,
+     "stress": 1.96,
+     "reads": 10.0,
+     "rmse": 13.92,
+     "bias": 7.331,
+     "reward": -0.258
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.617,
+     "water": 74.5,
+     "stress": 1.46,
+     "reads": 3.85,
+     "rmse": 14.243,
+     "bias": 6.464,
+     "reward": 1.107
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.934,
+     "water": 129.0,
+     "stress": 0.224,
+     "reads": 10.0,
+     "rmse": 13.332,
+     "bias": -3.252,
+     "reward": 2.223
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.991,
+     "water": 121.0,
+     "stress": 0.056,
+     "reads": 4.05,
+     "rmse": 12.627,
+     "bias": -1.02,
+     "reward": 3.333
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.422,
+     "water": 85.0,
+     "stress": 1.966,
+     "reads": 10.0,
+     "rmse": 14.552,
+     "bias": 3.973,
+     "reward": -1.022
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.772,
+     "water": 92.0,
+     "stress": 0.776,
+     "reads": 4.05,
+     "rmse": 12.689,
+     "bias": 3.401,
+     "reward": 2.019
+    }
+   }
+  },
+  {
+   "method": "none",
+   "prior_std_m3m3": null,
+   "drift_std_m3m3": null,
+   "fault_mean_objective": 1.6013,
+   "nominal_mean_objective": 2.5485,
+   "end_of_season_offset_std_m3m3": null,
+   "by_cell": {
+    "nominal|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "nominal|soil_threshold": {
+     "yield": 8.855,
+     "water": 108.0,
+     "stress": 0.54,
+     "reads": 10.0,
+     "rmse": 10.196,
+     "bias": 1.928,
+     "reward": 1.922
+    },
+    "nominal|lookahead_carat": {
+     "yield": 8.935,
+     "water": 97.5,
+     "stress": 0.258,
+     "reads": 4.0,
+     "rmse": 11.246,
+     "bias": 2.494,
+     "reward": 3.175
+    },
+    "missing|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "missing|soil_threshold": {
+     "yield": 8.882,
+     "water": 106.0,
+     "stress": 0.466,
+     "reads": 10.0,
+     "rmse": 10.668,
+     "bias": 1.631,
+     "reward": 2.132
+    },
+    "missing|lookahead_carat": {
+     "yield": 8.95,
+     "water": 99.5,
+     "stress": 0.184,
+     "reads": 3.6,
+     "rmse": 11.411,
+     "bias": 2.499,
+     "reward": 3.297
+    },
+    "biased+|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased+|soil_threshold": {
+     "yield": 8.407,
+     "water": 73.0,
+     "stress": 2.315,
+     "reads": 10.0,
+     "rmse": 14.044,
+     "bias": 9.702,
+     "reward": -1.007
+    },
+    "biased+|lookahead_carat": {
+     "yield": 8.572,
+     "water": 72.5,
+     "stress": 1.599,
+     "reads": 3.55,
+     "rmse": 14.402,
+     "bias": 6.698,
+     "reward": 0.833
+    },
+    "biased-|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "biased-|soil_threshold": {
+     "yield": 8.986,
+     "water": 145.0,
+     "stress": 0.053,
+     "reads": 10.0,
+     "rmse": 13.124,
+     "bias": -6.614,
+     "reward": 2.444
+    },
+    "biased-|lookahead_carat": {
+     "yield": 8.991,
+     "water": 123.75,
+     "stress": 0.056,
+     "reads": 3.95,
+     "rmse": 12.85,
+     "bias": -1.33,
+     "reward": 3.318
+    },
+    "stuck|fixed_schedule": {
+     "yield": 9.0,
+     "water": 350.0,
+     "stress": 0.0,
+     "reads": 0.0,
+     "rmse": 11.202,
+     "bias": 4.065,
+     "reward": -10.5
+    },
+    "stuck|soil_threshold": {
+     "yield": 8.294,
+     "water": 85.0,
+     "stress": 2.37,
+     "reads": 10.0,
+     "rmse": 15.15,
+     "bias": 4.721,
+     "reward": -1.971
+    },
+    "stuck|lookahead_carat": {
+     "yield": 8.746,
+     "water": 91.5,
+     "stress": 0.859,
+     "reads": 3.7,
+     "rmse": 13.037,
+     "bias": 3.667,
+     "reward": 1.87
+    }
+   }
+  }
+ ]
+}

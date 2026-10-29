@@ -57,15 +57,27 @@ Recorded outcome (`docs/results/validation_tuning.json`): CARAT observation cost
 .venv/bin/python scripts/run_experiment.py --config configs/experiments/baselines.yaml --model-id <selected model id>
 ```
 
-`--model-root` points at another model directory (e.g. a UI data root's `artifacts/models`); `--no-aquacrop` skips AquaCrop. **Verified:** re-running this command against the recorded checkpoint reproduced every mean in `docs/results/main_benchmark.json` (11 methods × irrigation, yield proxy, stress, readings, twin RMSE, objective) exactly — 0 mismatches.
+`--model-root` points at another model directory (e.g. a UI data root's `artifacts/models`); `--no-aquacrop` skips AquaCrop. The recorded benchmark predates sensor-bias handling: add `--twin-bias none` to reproduce it (without it, the current default twin is used). **Verified** (before bias handling was added): re-running this command against the recorded checkpoint reproduced every mean in `docs/results/main_benchmark.json` (11 methods × irrigation, yield proxy, stress, readings, twin RMSE, objective) exactly — 0 mismatches.
 
-5. Robustness sweep:
+5. Robustness sweep (also recorded before bias handling; add `--twin-bias none` to reproduce):
 
 ```bash
 .venv/bin/python scripts/run_experiment.py --config configs/experiments/robustness.yaml --model-id <selected model id>
 ```
 
-6. Render saved experiment JSON as tables:
+6. Sensor faults. The PPO experiment (missing / biased / stuck; B2, B3, A6, P; seeds 1–3; budget 10):
+
+```bash
+./scripts/run_sensor_faults.sh --model-id <selected model id>
+```
+
+`docs/results/sensor_faults.md` was recorded before sensor-bias handling; add `--twin-bias none` to reproduce it. The twin bias-handling comparison with PPO-free planners (needs no model, ≈ 1 min per split on 2 CPUs):
+
+```bash
+.venv/bin/python scripts/sensor_bias_bench.py --split test --out docs/results/sensor_bias_nonppo_test
+```
+
+7. Render saved experiment JSON as tables:
 
 ```bash
 .venv/bin/python scripts/summarize_results.py docs/results/main_benchmark.json
@@ -75,7 +87,7 @@ Expected outputs: `artifacts/experiments/<id or cli-timestamp>/{results.csv, sum
 
 ## Recorded results (simulated; synthetic weather)
 
-Files: `docs/results/` — `main_benchmark.{json,md}`, `main_benchmark_report.html`, `robustness.json`, `robustness_breakdown.md`, `sensor_faults.md` (+ `fault_*.json`), `validation_tuning.json`, `model_*.json`. `main_benchmark_v1_superseded.json` is kept for transparency: in that first run the "daily readings" reference was wrongly capped at the 10-reading budget (identical to B5); it was fixed and the benchmark re-run.
+Files: `docs/results/` — `main_benchmark.{json,md}`, `main_benchmark_report.html`, `robustness.json`, `robustness_breakdown.md`, `sensor_faults.md` (+ `fault_*.json`), `sensor_bias_nonppo_{test,validation}.{md,json}`, `sensor_bias_tuning.json`, `validation_tuning.json`, `model_*.json`. `main_benchmark_v1_superseded.json` is kept for transparency: in that first run the "daily readings" reference was wrongly capped at the 10-reading budget (identical to B5); it was fixed and the benchmark re-run.
 
 ### Main benchmark (test seasons 2020–2023 × seeds 1–5 = 20 matched cells per method, budget 10 readings, σ 0.02 m³/m³)
 
@@ -111,7 +123,23 @@ What the paired comparisons (method − Full CARAT, 20 pairs) show:
 
 ### Sensor faults (budget 10, 3 seeds)
 
-`docs/results/sensor_faults.md`: with 25 % dropout or a stuck sensor, Full CARAT kept its yield proxy (8.47, 8.55 t/ha). With a **+0.03 m³/m³ wet bias**, both correction-based methods (B3 8.02, CARAT 8.07 t/ha) fell to roughly the no-reading PPO level (8.05): the twin trusts biased readings and under-irrigates. No bias detection is implemented.
+`docs/results/sensor_faults.md`: with 25 % dropout or a stuck sensor, Full CARAT kept its yield proxy (8.47, 8.55 t/ha). With a **+0.03 m³/m³ wet bias**, both correction-based methods (B3 8.02, CARAT 8.07 t/ha) fell to roughly the no-reading PPO level (8.05): the twin trusts biased readings and under-irrigates. These runs predate sensor-bias handling and have not yet been re-run with it (PPO could not be installed in the session that added it).
+
+### Sensor-bias handling (PPO-free planners, test seasons × seeds 1–5 = 20 cells)
+
+`docs/results/sensor_bias_nonppo_test.md`, default augmented offset state vs no bias handling, same season and seed:
+
+| Fault | Planner | Yield proxy, none → augmented (t/ha) | Δ [95 % CI] |
+|---|---|---|---|
+| +0.03 wet bias | CARAT planner | 7.99 → 8.52 | +0.53 [+0.30, +0.79] |
+| +0.03 wet bias | Soil threshold | 7.86 → 8.41 | +0.55 [+0.28, +0.90] |
+| stuck | CARAT planner | 8.39 → 8.65 | +0.26 [−0.09, +0.65] |
+| stuck | Soil threshold | 7.95 → 8.38 | +0.43 [+0.03, +0.83] |
+| −0.03 dry bias | CARAT planner | 8.80 → 8.75 | −0.05 [−0.18, +0.08], 13 mm less water |
+| none (healthy) | CARAT planner | 8.72 → 8.67 | −0.06 [−0.30, +0.13] |
+| none (healthy) | Soil threshold | 8.64 → 8.56 | −0.08 [−0.33, +0.18] |
+
+The wet bias now costs the CARAT planner 0.2 t/ha instead of 0.7. The price: with a healthy sensor the twin's RMSE rises from 11.7 to 14.3 mm and the yield proxy dips slightly (inconclusive), because part of the twin's own systematic error is attributed to the sensor (METHODOLOGY §5.1). The simpler innovation monitor recovered a sixth to a third of the wet-bias loss (+0.11 / +0.24 t/ha) at no measurable nominal cost. With `twin_bias.method: none`, every run is identical to the code before this change.
 
 ### Caveats on these numbers
 

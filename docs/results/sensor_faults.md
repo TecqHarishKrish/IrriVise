@@ -1,3 +1,5 @@
+> **Recorded before sensor-bias handling existed** (equivalent to `twin_bias.method: none`). The twin's default is now the augmented offset state (METHODOLOGY §5.1); its effect on PPO-free planners is in `sensor_bias_nonppo_test.md`. Re-run these PPO experiments with `./scripts/run_sensor_faults.sh` (add `--twin-bias none` to reproduce the numbers below).
+
 ## Sensor fault: missing (test seasons)
 
 Experiment `1a889146-e293-4bcd-b8ca-0037ae44d205` · split **test** · seeds [1, 2, 3] · observation budgets [10] · sensor noise [0.02] m³/m³ (missing) · reference **ppo_fixed_interval** · 48 runs, 0 failed, 0 hard-constraint violations.

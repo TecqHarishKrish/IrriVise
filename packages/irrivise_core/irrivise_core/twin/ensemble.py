@@ -16,7 +16,7 @@ ensemble shift so that the ensemble mean and variance equal exactly
 Degenerate cases: P below 1e-12 mm² is treated as 0; P + R == 0 → K = 0 (no update); members are clipped to
 their physical bounds afterwards and the clip count is reported.
 
-Sensor-bias handling (``scenario.twin_bias``, METHODOLOGY.md §2.4):
+Sensor-bias handling (``scenario.twin_bias``, METHODOLOGY.md §5.1):
 
 * ``augmented`` — each member i also carries a candidate sensor offset b_i
   (m³/m³). The predicted reading is y_i = s_i + b_i·Z (Z = root depth in mm).

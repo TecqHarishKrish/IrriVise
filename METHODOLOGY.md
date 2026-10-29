@@ -84,9 +84,38 @@ P' = (1 − K) P,     member_k' = mean' + √(1 − K) · (member_k − mean)
 ```
 
 * P < 1e−12 mm² is treated as 0; P + R = 0 ⇒ K = 0 (no update).
-* Members are clipped to [θ_wp, θ_sat]; the clip count is reported.
+* Members are clipped to [θ_wp, θ_sat]; the clip count is reported (offsets are not clipped).
 * Innovation gate: readings with |z − mean| > 4·√(P + R) are rejected and flagged (budget already charged).
 * Delayed readings (state from *d* days earlier) inflate R by (1 + d).
+
+The formulas above are the `twin_bias.method: none` case. The default since 2026-10-29 is the offset-aware update in §5.1.
+
+### 5.1 Sensor-bias handling (`scenario.twin_bias`)
+
+A sensor with a persistent offset pulls an unbiased Kalman update to the wrong soil state reading after reading (a +0.03 m³/m³ wet bias left the twin ≈ 6–8 mm too wet and cost 0.5–0.8 t/ha of yield proxy). Two remedies are implemented; `augmented` is the default.
+
+**`augmented` — joint soil + sensor-offset state.** Each member *i* also carries a candidate offset bᵢ (m³/m³). The predicted reading is yᵢ = sᵢ + bᵢ·Z (Z = Zr·1000 mm). A reading updates (s, b) with the scalar-observation ensemble square-root filter (Whitaker & Hamill 2002):
+
+```
+P_yy = var(y),  C_sy = cov(s, y),  C_by = cov(b, y)
+K_s = C_sy / (P_yy + R),   K_b = C_by / (P_yy + R),   α = 1 / (1 + √(R / (P_yy + R)))
+mean' = mean + K (z − ȳ),   perturbation_i' = perturbation_i − α K (y_i − ȳ)
+```
+
+With every bᵢ = 0 this is exactly the update in §5 (1 − αK = √(1 − K)). Details:
+
+* **Prior:** bᵢ are deterministic N(0, σ_b²) quantiles, σ_b = 0.015 m³/m³ (no draws from the twin's random stream, so the soil ensemble is identical in every mode).
+* **Drift:** each forecast step widens the offset spread by a random walk of 0.003 m³/m³/day (variance + q²), so a slowly drifting or stuck sensor can still be followed. The offset mean is not moved.
+* **Decoupling:** each forecast step also removes the sample covariance between storage and offset, rescaling the offset perturbations to keep their variance. Without this, the anti-correlation left by an update survived while the soil dynamics shrank the storage spread, and the storage gain turned negative mid-season (a wetter reading made the twin drier). This is a two-stage (decoupled) bias filter; it gives up some information in exchange for a gain that stays in [0, 1].
+* **Gate:** the outlier gate uses √(P_yy + R).
+* **VOI:** CARAT's value-of-information calculation uses the offset-aware sensor std √(σ² + var(b)) (`EnsembleTwin.effective_sensor_std`).
+* **Diagnostics:** every correction records the prior and posterior offset mean and the normalised innovation; `EnsembleTwin.bias_state()` returns the offset belief.
+
+**`innovation_monitor` — detect and down-weight.** A two-sided CUSUM on normalised innovations ν = (z − ȳ)/√(P + R): g⁺ = max(0, g⁺ + ν − k), g⁻ = max(0, g⁻ − ν − k), k = 0.5. While g⁺ (or g⁻) exceeds h = 3, readings that disagree in that direction get R × 10. It flags a bias but cannot correct it.
+
+**Tuning (validation seasons 2016–2019 only):** σ_b ∈ {0.01, 0.015, 0.02, 0.03} × drift ∈ {0 … 0.012}, scored by the objective of the soil-threshold rule and the CARAT planner under nominal, missing, ±0.03 biased and stuck sensors (`docs/results/sensor_bias_tuning.json`). Larger drifts scored higher only by inflating the offset uncertainty until readings are effectively ignored, so the rule was: best fault-averaged objective among settings whose end-of-season offset std is ≤ 0.05 m³/m³ and whose nominal objective is within 0.25 of `none` → σ_b = 0.015, drift 0.003.
+
+**Identifiability limit:** a sensor offset and a systematic twin error (wrong soil parameters or ET) look the same in the innovations. With a healthy sensor the augmented filter attributes part of the twin's own dryness to the sensor, so its twin RMSE rises (11.7 → 14.3 mm on test seasons). Only the dynamics (drainage to field capacity, the soil-parameter prior) separate the two.
 
 ## 6. Sensor gateway
 
@@ -195,3 +224,4 @@ Hard limits apply to every method. B1's threshold uses only the twin estimate (c
 4. A single PPO checkpoint is shared across observation policies; PPO was not trained jointly with CARAT readings.
 5. AquaCrop evaluation uses default, uncalibrated crop/soil parameters and reveals structural mismatch with the surrogate.
 6. Results on the synthetic fixture say nothing about real Tamil Nadu farms.
+7. Sensor-bias handling assumes a slowly varying additive offset. It cannot fully separate a sensor offset from a systematic twin error, costs some accuracy with a healthy sensor, and was evaluated with PPO-free planners only; the PPO sensor-fault experiment still has to be re-run with it (`scripts/run_sensor_faults.sh`).
