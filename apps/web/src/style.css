@@ -6,3 +6,28 @@
 
 .controller-picker{border:0;padding:0;margin:0 0 14px}.controller-picker legend{font-size:11px;font-weight:800;color:var(--muted);margin-bottom:8px}.controller-card{display:flex;flex-direction:row;align-items:flex-start;gap:10px;padding:11px 12px;margin:7px 0;border:1px solid var(--line);border-radius:8px;background:var(--surface);cursor:pointer}.controller-card:hover{border-color:#65aa91;background:var(--surface2)}.controller-card.selected{border-color:var(--accent);box-shadow:0 0 0 2px #16826824}.controller-card input{width:auto;min-height:auto;margin-top:2px;accent-color:var(--accent)}.controller-card b,.controller-card small{display:block}.controller-card b{font-size:12px;color:var(--text)}.controller-card small{font-size:11px;line-height:1.4;font-weight:500;color:var(--muted);margin-top:3px}
 .analyst-answer{margin-top:16px;padding:16px;border-radius:8px;background:var(--surface2);border-left:3px solid var(--accent)}.analyst-answer small{display:block;color:var(--muted);font-size:10px;font-weight:800}.analyst-answer p{white-space:pre-wrap;font-size:13px;line-height:1.65;margin:9px 0 0;color:var(--text)}
+
+/* ── Progress bar ── */
+.progress-bar{height:6px;background:var(--line);border-radius:4px;overflow:hidden;width:100%;margin-bottom:4px}
+.progress-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .4s ease}
+
+/* ── Spin animation ── */
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{animation:spin 1s linear infinite;display:inline-block}
+
+/* ── Stat accent ── */
+.stat.stat-accent{border-left:3px solid var(--accent)}.stat.stat-accent strong{color:var(--accent)}
+
+/* ── Grid span-two ── */
+.grid .span-two{grid-column:1 / -1}
+
+/* ── Ghost danger ── */
+.ghost.danger{color:#a4492d;border-color:#ecc6b7}.ghost.danger:hover{background:#fff0e9}
+[data-theme=dark] .ghost.danger{color:#f09070;border-color:#6b3323}
+
+/* ── Recharts dark mode ── */
+[data-theme=dark] .recharts-cartesian-axis-tick-value{fill:var(--muted)!important}
+
+/* ── Authenticated container ── */
+.authenticated{display:flex;flex-direction:column;min-height:100vh}.authenticated>.app{flex:1}
+

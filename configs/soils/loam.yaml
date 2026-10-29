@@ -1,0 +1,7 @@
+name: loam
+theta_wp: 0.15
+theta_fc: 0.31
+theta_sat: 0.46
+drainage_tau: 0.50
+curve_number: 75
+source: "FAO-56 Table 19 ranges; AquaCrop tau relation (Ksat ~ 250 mm/day); USDA TR-55 CN"

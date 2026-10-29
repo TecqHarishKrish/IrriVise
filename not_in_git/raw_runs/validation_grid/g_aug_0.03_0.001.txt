@@ -1,0 +1,16 @@
+nominal   fixed_schedule   yield=9.0 water=350.0 stress=0.0 reads=0.0 rmse=11.202 bias=4.065 reward=-10.5
+nominal   soil_threshold   yield=8.79 water=100.0 stress=0.777 reads=10.0 rmse=12.478 bias=1.596 reward=1.494
+nominal   lookahead_carat  yield=8.918 water=99.25 stress=0.326 reads=3.7 rmse=12.546 bias=2.348 reward=3.062
+missing   fixed_schedule   yield=9.0 water=350.0 stress=0.0 reads=0.0 rmse=11.202 bias=4.065 reward=-10.5
+missing   soil_threshold   yield=8.829 water=102.0 stress=0.696 reads=10.0 rmse=12.782 bias=1.432 reward=1.786
+missing   lookahead_carat  yield=8.891 water=98.5 stress=0.424 reads=3.6 rmse=12.868 bias=2.602 reward=2.888
+biased+   fixed_schedule   yield=9.0 water=350.0 stress=0.0 reads=0.0 rmse=11.202 bias=4.065 reward=-10.5
+biased+   soil_threshold   yield=8.723 water=96.0 stress=1.098 reads=10.0 rmse=12.71 bias=3.113 reward=1.079
+biased+   lookahead_carat  yield=8.831 water=92.5 stress=0.631 reads=3.75 rmse=13.076 bias=3.569 reward=2.483
+biased-   fixed_schedule   yield=9.0 water=350.0 stress=0.0 reads=0.0 rmse=11.202 bias=4.065 reward=-10.5
+biased-   soil_threshold   yield=8.839 water=112.0 stress=0.564 reads=10.0 rmse=12.514 bias=0.219 reward=1.713
+biased-   lookahead_carat  yield=8.967 water=108.0 stress=0.143 reads=3.8 rmse=12.249 bias=0.924 reward=3.311
+stuck     fixed_schedule   yield=9.0 water=350.0 stress=0.0 reads=0.0 rmse=11.202 bias=4.065 reward=-10.5
+stuck     soil_threshold   yield=8.448 water=83.0 stress=1.931 reads=10.0 rmse=13.857 bias=3.158 reward=-0.828
+stuck     lookahead_carat  yield=8.807 water=94.0 stress=0.673 reads=3.75 rmse=13.115 bias=3.118 reward=2.291
+elapsed 47s

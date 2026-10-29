@@ -26,6 +26,8 @@ def connect() -> sqlite3.Connection:
     CREATE TABLE IF NOT EXISTS scenarios(id TEXT PRIMARY KEY, project_id TEXT NOT NULL REFERENCES projects(id), name TEXT NOT NULL, budget_mm REAL NOT NULL, daily_max_mm REAL NOT NULL, observation_budget INTEGER NOT NULL, created_at TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS jobs(id TEXT PRIMARY KEY, kind TEXT NOT NULL, scenario_id TEXT NOT NULL REFERENCES scenarios(id), controller TEXT NOT NULL, seed INTEGER NOT NULL, status TEXT NOT NULL, progress INTEGER NOT NULL DEFAULT 0, current_step INTEGER NOT NULL DEFAULT 0, total_steps INTEGER NOT NULL DEFAULT 0, cancel_requested INTEGER NOT NULL DEFAULT 0, payload_json TEXT, dataset_id TEXT, created_at TEXT NOT NULL, started_at TEXT, finished_at TEXT, error TEXT, run_id TEXT);
     CREATE TABLE IF NOT EXISTS runs(id TEXT PRIMARY KEY, job_id TEXT UNIQUE NOT NULL REFERENCES jobs(id), scenario_id TEXT NOT NULL REFERENCES scenarios(id), controller TEXT NOT NULL, summary_json TEXT NOT NULL, trace_path TEXT NOT NULL, created_at TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS experiments(id TEXT PRIMARY KEY, scenario_id TEXT NOT NULL REFERENCES scenarios(id), account_id TEXT REFERENCES accounts(id), dataset_id TEXT NOT NULL, seed INTEGER NOT NULL, controllers_json TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending', created_at TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS experiment_jobs(experiment_id TEXT NOT NULL REFERENCES experiments(id), job_id TEXT NOT NULL REFERENCES jobs(id), controller TEXT NOT NULL, PRIMARY KEY(experiment_id, job_id));
     """)
     columns = {row[1] for row in db.execute("PRAGMA table_info(jobs)")}
     for name in ("current_step", "total_steps", "payload_json", "dataset_id"):
@@ -35,6 +37,9 @@ def connect() -> sqlite3.Connection:
     project_columns = {row[1] for row in db.execute("PRAGMA table_info(projects)")}
     if "account_id" not in project_columns:
         db.execute("ALTER TABLE projects ADD COLUMN account_id TEXT REFERENCES accounts(id)")
+    exp_columns = {row[1] for row in db.execute("PRAGMA table_info(experiments)")}
+    if "account_id" not in exp_columns:
+        db.execute("ALTER TABLE experiments ADD COLUMN account_id TEXT REFERENCES accounts(id)")
     return db
 
 
