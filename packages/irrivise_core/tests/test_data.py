@@ -65,7 +65,7 @@ def test_synthetic_fixture_is_deterministic_and_committed(tmp_path):
 
     path = tmp_path / "w.csv"
     write_weather_csv(generate_synthetic_weather(), path)
-    manifest = json.loads((nasa_power.Path(__file__).resolve().parents[3] / "data/manifests/synthetic_weather_tn_v1.json").read_text())
+    manifest = json.loads((nasa_power.Path(__file__).resolve().parents[3] / "data/manifests/synthetic_weather_tn_v1.json").read_text(encoding="utf-8"))
     assert sha256_file(path) == manifest["checksum_sha256"]
 
 

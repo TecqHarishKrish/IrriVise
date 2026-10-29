@@ -179,7 +179,7 @@ def train_ppo(scenario: ScenarioConfig, config: TrainingConfig, train_seasons: l
         "label": "Trained on simulated seasons from the fast surrogate; not field-validated",
     }
     manifest_path = output_dir / f"{model_id}.json"
-    manifest_path.write_text(json.dumps(manifest, indent=2))
+    manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     return TrainedModel(model_id, seed, best_path, manifest_path, manifest)
 
 
@@ -193,7 +193,7 @@ def load_verified(model_root: Path, model_id: str) -> tuple[object, dict]:
     manifest_path = (root / f"{model_id}.json").resolve()
     if root not in manifest_path.parents or not manifest_path.is_file():
         raise CheckpointError("Model manifest not found")
-    manifest = json.loads(manifest_path.read_text())
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     checkpoint = (root / manifest["checkpoint_file"]).resolve()
     if root not in checkpoint.parents or not checkpoint.is_file():
         raise CheckpointError("Checkpoint file missing")

@@ -86,7 +86,7 @@ def read_run(run_id: str, session: Session = Depends(get_session)):
     out = run_dict(r)
     manifest = artifacts.run_dir(r.id) / "manifest.json"
     if manifest.exists():
-        data = json.loads(manifest.read_text())
+        data = json.loads(manifest.read_text(encoding="utf-8"))
         data.pop("hidden_parameters_evaluation_only", None)  # decision views never receive hidden truth
         out["manifest"] = data
     return out
@@ -105,7 +105,7 @@ def daily(run_id: str, offset: int = Query(0, ge=0), limit: int = Query(400, ge=
 def decisions(run_id: str, day: int | None = Query(None, ge=1, le=400), offset: int = Query(0, ge=0), limit: int = Query(30, ge=1, le=400),
               session: Session = Depends(get_session)):
     r = get_run(session, run_id)
-    traces = json.loads((artifacts.run_dir(r.id) / "decisions.json").read_text())
+    traces = json.loads((artifacts.run_dir(r.id) / "decisions.json").read_text(encoding="utf-8"))
     if day is not None:
         match = [t for t in traces if t["day"] == day]
         if not match:
@@ -120,6 +120,6 @@ def evaluation(run_id: str, session: Session = Depends(get_session)):
     r = get_run(session, run_id)
     directory = artifacts.run_dir(r.id)
     rows = [_coerce(x) for x in artifacts.read_csv(directory / "evaluation_truth.csv")]
-    manifest = json.loads((directory / "manifest.json").read_text())
+    manifest = json.loads((directory / "manifest.json").read_text(encoding="utf-8"))
     return {"run_id": r.id, "label": "SIMULATED REFERENCE — evaluation only; not available to the policy, CARAT or risk manager",
             "hidden_parameters": manifest.get("hidden_parameters_evaluation_only"), "rows": rows}

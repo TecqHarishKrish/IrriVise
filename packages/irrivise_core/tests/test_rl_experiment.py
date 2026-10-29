@@ -77,9 +77,9 @@ def test_tampered_or_incompatible_checkpoint_rejected(tiny_model, tmp_path):
     with pytest.raises(CheckpointError, match="hash mismatch"):
         load_verified(copy, "m1")
     shutil.copy(out / "m1.zip", copy / "m1.zip")
-    manifest = json.loads((copy / "m1.json").read_text())
+    manifest = json.loads((copy / "m1.json").read_text(encoding="utf-8"))
     manifest["feature_spec_version"] = "old"
-    (copy / "m1.json").write_text(json.dumps(manifest))
+    (copy / "m1.json").write_text(json.dumps(manifest), encoding="utf-8")
     with pytest.raises(CheckpointError, match="Incompatible"):
         load_verified(copy, "m1")
     with pytest.raises(CheckpointError):

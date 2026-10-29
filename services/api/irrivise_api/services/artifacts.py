@@ -52,14 +52,14 @@ def export_dir() -> Path:
 def write_json(path: Path, value) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
-    tmp.write_text(json.dumps(value, indent=1, default=str))
+    tmp.write_text(json.dumps(value, indent=1, default=str), encoding="utf-8")
     tmp.replace(path)
 
 
 def write_csv(path: Path, rows: list[dict]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
-    with tmp.open("w", newline="") as handle:
+    with tmp.open("w", newline="", encoding="utf-8") as handle:
         if rows:
             writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()), lineterminator="\n")
             writer.writeheader()
@@ -68,7 +68,7 @@ def write_csv(path: Path, rows: list[dict]) -> None:
 
 
 def read_csv(path: Path) -> list[dict]:
-    with path.open(newline="") as handle:
+    with path.open(newline="", encoding="utf-8") as handle:
         return list(csv.DictReader(handle))
 
 

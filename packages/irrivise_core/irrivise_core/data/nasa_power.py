@@ -166,12 +166,12 @@ def download_power(latitude: float, longitude: float, start: date, end: date, ti
     raw_path = root / "data/raw" / f"nasa-{key}.json"
     csv_path = root / "data/processed" / f"nasa-{key}.csv"
     cached = raw_path.exists()
-    payload = json.loads(raw_path.read_text()) if cached else fetch_power(query, client=client, sleep=sleep)
+    payload = json.loads(raw_path.read_text(encoding="utf-8")) if cached else fetch_power(query, client=client, sleep=sleep)
     frame, meta = parse_power(payload, start, end, latitude, time_standard)
     clean, report = validate_frame(frame)
     if not cached:
         raw_path.parent.mkdir(parents=True, exist_ok=True)
-        raw_path.write_text(json.dumps(payload))
+        raw_path.write_text(json.dumps(payload), encoding="utf-8")
     write_weather_csv(clean, csv_path)
     return {
         "cache_key": key, "source": "nasa_power", "source_url": ENDPOINT, "query": query, "cache_hit": cached,

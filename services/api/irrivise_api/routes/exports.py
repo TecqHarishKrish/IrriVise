@@ -41,7 +41,7 @@ def _build(session: Session, body: ExportIn) -> tuple[bytes, str]:
     if body.source_type == "run":
         run = run_dict(get_run(session, body.source_id))
         directory = artifacts.run_dir(body.source_id)
-        manifest = json.loads((directory / "manifest.json").read_text())
+        manifest = json.loads((directory / "manifest.json").read_text(encoding="utf-8"))
         _verify(directory, manifest)
         daily = [_coerce(r) for r in artifacts.read_csv(directory / "daily.csv")]
         if body.format == "csv":

@@ -25,7 +25,7 @@ def main() -> None:
     if args.check:
         tmp = ROOT / ".cache" / "sample_check.csv"
         write_weather_csv(frame, tmp)
-        expected = json.loads(MANIFEST.read_text())["checksum_sha256"]
+        expected = json.loads(MANIFEST.read_text(encoding="utf-8"))["checksum_sha256"]
         actual = sha256_file(tmp)
         print(json.dumps({"expected": expected, "regenerated": actual, "match": expected == actual}))
         raise SystemExit(0 if expected == actual else 1)
@@ -36,7 +36,7 @@ def main() -> None:
                 "label": "SYNTHETIC DEMONSTRATION — generated weather, not historical observations or field measurements",
                 "method": "Markov-chain rain occurrence + gamma amounts + year factor; Hargreaves ET0 (FAO-56 eq. 52)"}
     MANIFEST.parent.mkdir(parents=True, exist_ok=True)
-    MANIFEST.write_text(json.dumps(manifest, indent=2) + "\n")
+    MANIFEST.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(manifest, indent=2))
 
 

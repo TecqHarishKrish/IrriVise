@@ -43,7 +43,7 @@ def main() -> None:
                         help="override scenario.twin_bias.method (none reproduces results saved before bias handling)")
     args = parser.parse_args()
     models = (ROOT / args.model_root).resolve()
-    spec = yaml.safe_load((ROOT / args.config).read_text())
+    spec = yaml.safe_load((ROOT / args.config).read_text(encoding="utf-8"))
     dataset = ROOT / spec.pop("dataset", "data/sample/synthetic_weather_tn_v1.csv")
     scenario_spec = spec.pop("scenario", {})
     if args.twin_bias:
@@ -73,18 +73,18 @@ def main() -> None:
     out.mkdir(parents=True, exist_ok=False)
     rows = summary.pop("rows")
     import csv
-    with (out / "results.csv").open("w", newline="") as handle:
+    with (out / "results.csv").open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=sorted({k for r in rows for k in r}), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
-    (out / "summary.json").write_text(json.dumps(summary, indent=1, default=str))
+    (out / "summary.json").write_text(json.dumps(summary, indent=1, default=str), encoding="utf-8")
     manifest = {"config_file": args.config, "config": config.model_dump(), "scenario_sha256": sha256_json(scenario.model_dump(mode="json")),
                 "dataset": str(dataset.relative_to(ROOT)), "dataset_sha256": sha256_file(dataset), "split": split.as_dict(),
                 "model_id": model_manifest["model_id"] if model_manifest else None,
                 "model_checkpoint_sha256": model_manifest["checkpoint_sha256"] if model_manifest else None,
                 "code_revision": code_revision(), "package_versions": package_versions(),
                 "files": {n: sha256_file(out / n) for n in ("results.csv", "summary.json")}}
-    (out / "manifest.json").write_text(json.dumps(manifest, indent=2))
+    (out / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     print("\n".join(summary["narrative"]))
     print(f"\nSaved to {out.relative_to(ROOT)}")
 

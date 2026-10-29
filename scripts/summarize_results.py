@@ -22,7 +22,7 @@ def cell(stat: dict | None, digits: int) -> str:
 
 
 def render(path: Path) -> str:
-    exp = json.loads(path.read_text())
+    exp = json.loads(path.read_text(encoding="utf-8"))
     s, cfg = exp["summary"], exp["config"]
     out = [f"## {exp['name']}", "",
            f"Experiment `{exp['id']}` · split **{cfg['split']}** · seeds {cfg['seeds']} · observation budgets {cfg['observation_budgets']} · "

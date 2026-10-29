@@ -71,7 +71,7 @@ def main() -> None:
                                             "b5_uncertainty_threshold": float(pick(results["b5_uncertainty_threshold"]))}}
     path = ROOT / args.out
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(out, indent=2))
+    path.write_text(json.dumps(out, indent=2), encoding="utf-8")
     print(json.dumps(out["selected"]))
 
 

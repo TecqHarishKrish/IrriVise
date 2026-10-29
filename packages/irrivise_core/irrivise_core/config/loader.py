@@ -26,7 +26,7 @@ def _load(kind: str, name: str) -> dict:
     path = config_dir() / kind / f"{name}.yaml"
     if not path.is_file():
         raise ValueError(f"Unknown {kind} profile: {name}")
-    data = yaml.safe_load(path.read_text())
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(data, dict):
         raise ValueError(f"Malformed {kind} profile: {name}")
     return data

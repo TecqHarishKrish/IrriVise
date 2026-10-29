@@ -101,7 +101,7 @@ def main() -> None:
     manifest = {"split": args.split, "seasons": [s.season_id for s in evaluation], "seeds": seeds, "observation_budget": 10,
                 "sensor_noise_m3m3": 0.02, "carat_observation_cost": 0.0, "twin_bias": base.twin_bias.model_copy(update=twin_overrides).model_dump(),
                 "dataset_sha256": sha256_file(dataset), "code_revision": code_revision(), "label": "SIMULATED — not field data"}
-    out.with_suffix(".json").write_text(json.dumps({"manifest": manifest, "summary": summary, "paired_vs_none": paired, "rows": cells}, indent=1))
+    out.with_suffix(".json").write_text(json.dumps({"manifest": manifest, "summary": summary, "paired_vs_none": paired, "rows": cells}, indent=1), encoding="utf-8")
 
     lines = [f"## Twin sensor-bias handling, no-PPO planners ({args.split} seasons)", "",
              f"Seasons {manifest['seasons']} × seeds {seeds} = {len(evaluation) * len(seeds)} matched cells per row · budget 10 · noise 0.02 m³/m³ · "
@@ -120,7 +120,7 @@ def main() -> None:
         lines.append(f"| {fault} | {planner} | {LABEL[bm]} | {fmt(d['yield_proxy_t_ha'], 3)} | {fmt(d['seasonal_irrigation_mm'], 1)} | "
                      f"{fmt(d['objective_with_observation_cost'], 2)} |")
     lines += ["", "\\* 95 % CI excludes 0."]
-    out.with_suffix(".md").write_text("\n".join(lines) + "\n")
+    out.with_suffix(".md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"wrote {out.with_suffix('.md')} and .json")
 
 

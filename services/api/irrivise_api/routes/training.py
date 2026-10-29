@@ -28,7 +28,7 @@ def model_dict(m: ModelRecord, with_manifest: bool = False) -> dict:
            "created_at": m.created_at.isoformat() + "Z"}
     if with_manifest:
         path = artifacts.safe_join(*m.manifest_path.split("/"))
-        out["manifest"] = json.loads(path.read_text()) if path.exists() else None
+        out["manifest"] = json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
         checkpoint = artifacts.safe_join(*m.checkpoint_path.split("/"))
         out["checkpoint_bytes"] = checkpoint.stat().st_size if checkpoint.exists() else None
     return out

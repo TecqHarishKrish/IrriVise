@@ -33,7 +33,7 @@ def experiment_dict(g: ExperimentGroup, session: Session, full: bool = False) ->
         if full:
             out["summary"] = summary
             manifest = artifacts.experiment_dir(g.id) / "manifest.json"
-            out["manifest"] = json.loads(manifest.read_text()) if manifest.exists() else None
+            out["manifest"] = json.loads(manifest.read_text(encoding="utf-8")) if manifest.exists() else None
     return out
 
 
