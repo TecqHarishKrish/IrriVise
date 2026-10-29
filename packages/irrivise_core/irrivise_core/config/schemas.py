@@ -106,6 +106,26 @@ class UncertaintyConfig(_Frozen):
     observed_rain_rel_std: float = Field(default=0.15, ge=0, le=1, description="Gauge/gridded rain error seen by the agent")
 
 
+class TwinBiasConfig(_Frozen):
+    """How the twin guards against a sensor with a persistent offset (METHODOLOGY.md §2.4).
+
+    ``augmented``: every ensemble member also carries a candidate sensor offset
+    (prior N(0, prior_std²), slow random-walk drift); each reading updates storage
+    and offset jointly, so a persistent one-sided disagreement is gradually
+    attributed to the sensor instead of the soil.
+    ``innovation_monitor``: two-sided CUSUM on normalised innovations; while a
+    persistent one-sided drift is flagged, readings on that side are down-weighted.
+    ``none``: the original unbiased-sensor update.
+    """
+
+    method: Literal["none", "innovation_monitor", "augmented"] = "augmented"
+    prior_std_m3m3: float = Field(default=0.015, ge=0, le=0.2, description="Prior std of the sensor offset (tuned on validation seasons)")
+    drift_std_m3m3: float = Field(default=0.003, ge=0, le=0.05, description="Daily random-walk std of the offset (tuned on validation seasons)")
+    monitor_k: float = Field(default=0.5, ge=0, le=5, description="CUSUM slack, in innovation standard deviations")
+    monitor_h: float = Field(default=3.0, gt=0, le=50, description="CUSUM alarm level, in innovation standard deviations")
+    monitor_downweight: float = Field(default=10.0, ge=1, le=1e6, description="Sensor-variance multiplier while flagged")
+
+
 class CaratConfig(_Frozen):
     """CARAT decision layer: lookahead value model, regret and VOI."""
 
@@ -140,6 +160,7 @@ class ScenarioConfig(_Frozen):
     observation_budget: int = Field(default=10, ge=0, le=365)
     sensor: SensorConfig = SensorConfig()
     uncertainty: UncertaintyConfig = UncertaintyConfig()
+    twin_bias: TwinBiasConfig = TwinBiasConfig()
     reward: RewardWeights = RewardWeights()
     carat: CaratConfig = CaratConfig()
     risk: RiskConfig = RiskConfig()

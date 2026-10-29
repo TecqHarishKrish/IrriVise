@@ -8,8 +8,14 @@ from irrivise_core.simulation.sensor import SensorGateway
 from irrivise_core.twin.ensemble import EnsembleTwin
 
 
-def test_kalman_update_matches_formulas(scenario):
-    twin = EnsembleTwin(scenario, np.random.default_rng(1))
+@pytest.fixture(scope="module")
+def plain(scenario):
+    """Scenario with the original unbiased-sensor update (formula checks below assume it)."""
+    return scenario.model_copy(update={"twin_bias": scenario.twin_bias.model_copy(update={"method": "none"})})
+
+
+def test_kalman_update_matches_formulas(plain):
+    twin = EnsembleTwin(plain, np.random.default_rng(1))
     w = twin.weights
     mean = float(np.sum(w * twin.storage_mm))
     p = float(np.sum(w * (twin.storage_mm - mean) ** 2))
@@ -23,8 +29,8 @@ def test_kalman_update_matches_formulas(scenario):
     assert d["posterior_var_mm2"] < p
 
 
-def test_degenerate_variance_is_safe(scenario):
-    twin = EnsembleTwin(scenario, np.random.default_rng(2))
+def test_degenerate_variance_is_safe(plain):
+    twin = EnsembleTwin(plain, np.random.default_rng(2))
     twin.storage_mm[:] = twin.storage_mm.mean()
     before = twin.storage_mm.copy()
     d = twin.correct(float(before[0] / (twin.root_depth_m * 1000)) + 0.05, 0.0)

@@ -55,7 +55,7 @@ class ScenarioIn(_In):
     sensor_mode: Literal["nominal", "missing", "biased", "stuck", "delayed"] = "nominal"
     initial_fraction_mean: float = Field(default=0.7, ge=0, le=1)
     dataset_id: str | None = Field(default=None, max_length=36)
-    advanced: dict = Field(default_factory=dict, description="Optional overrides: carat, risk, reward, uncertainty sections")
+    advanced: dict = Field(default_factory=dict, description="Optional overrides: carat, risk, reward, uncertainty, twin_bias sections")
 
     @field_validator("name")
     @classmethod

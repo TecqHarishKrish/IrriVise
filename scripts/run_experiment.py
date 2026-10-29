@@ -39,11 +39,16 @@ def main() -> None:
     parser.add_argument("--model-id")
     parser.add_argument("--model-root", default="artifacts/models", help="directory holding <id>.zip/<id>.json")
     parser.add_argument("--no-aquacrop", action="store_true", help="skip AquaCrop even if the config enables it")
+    parser.add_argument("--twin-bias", choices=["none", "innovation_monitor", "augmented"],
+                        help="override scenario.twin_bias.method (none reproduces results saved before bias handling)")
     args = parser.parse_args()
     models = (ROOT / args.model_root).resolve()
     spec = yaml.safe_load((ROOT / args.config).read_text())
     dataset = ROOT / spec.pop("dataset", "data/sample/synthetic_weather_tn_v1.csv")
-    scenario = default_scenario(**spec.pop("scenario", {}))
+    scenario_spec = spec.pop("scenario", {})
+    if args.twin_bias:
+        scenario_spec = {**scenario_spec, "twin_bias": {**scenario_spec.get("twin_bias", {}), "method": args.twin_bias}}
+    scenario = default_scenario(**scenario_spec)
     config = ExperimentConfig(**spec)
     frame, _ = read_weather_csv(dataset)
     seasons, _ = extract_seasons(frame, scenario.planting_mmdd, scenario.crop.season_length)

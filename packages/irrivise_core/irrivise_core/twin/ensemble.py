@@ -15,10 +15,32 @@ ensemble shift so that the ensemble mean and variance equal exactly
 
 Degenerate cases: P below 1e-12 mm² is treated as 0; P + R == 0 → K = 0 (no update); members are clipped to
 their physical bounds afterwards and the clip count is reported.
+
+Sensor-bias handling (``scenario.twin_bias``, METHODOLOGY.md §2.4):
+
+* ``augmented`` — each member i also carries a candidate sensor offset b_i
+  (m³/m³). The predicted reading is y_i = s_i + b_i·Z (Z = root depth in mm).
+  The update is the scalar-observation ensemble square-root filter
+  (Whitaker & Hamill 2002) on the joint state (s, b):
+
+      K_s = C_sy / (P_yy + R),  K_b = C_by / (P_yy + R),
+      x̄' = x̄ + K (z − ȳ),      x_i' − x̄' = (x_i − x̄) − α K (y_i − ȳ),
+      α = 1 / (1 + √(R / (P_yy + R))).
+
+  With every b_i = 0 this is exactly the update above (1 − αK = √(1 − K)).
+  Offsets start at deterministic N(0, σ_b²) quantiles (no draws from the twin's
+  random stream, so the soil ensemble is identical in every mode) and their
+  spread is inflated by a small daily random walk so a drifting or stuck
+  sensor can still be followed.
+* ``innovation_monitor`` — a two-sided CUSUM on normalised innovations
+  ν = (z − ȳ)/√(P + R). While one side is above its alarm level, readings
+  that disagree in that direction get R multiplied by ``monitor_downweight``.
+* ``none`` — the original unbiased-sensor update.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
+from statistics import NormalDist
 
 import numpy as np
 
@@ -84,6 +106,13 @@ class EnsembleTwin:
         self.weights = np.full(k, 1.0 / k)
         self.day = 0
         self.last_observation_day: int | None = None
+        self.bias_cfg = scenario.twin_bias
+        self.bias_m3m3 = np.zeros(k)
+        if self.bias_cfg.method == "augmented" and self.bias_cfg.prior_std_m3m3 > 0:
+            q = np.array([NormalDist().inv_cdf((i + 0.5) / k) for i in range(k)])
+            self.bias_m3m3 = self.bias_cfg.prior_std_m3m3 * (q - q.mean()) / q.std()
+        self.cusum_pos = 0.0
+        self.cusum_neg = 0.0
 
     # -- propagation -------------------------------------------------------------
     def predict(self, irrigation_mm: float, observed_rain_mm: float, observed_eto_mm: float) -> None:
@@ -97,40 +126,121 @@ class EnsembleTwin:
         self.storage_mm = flux.storage_mm
         self.root_depth_m = zr_next
         self.day += 1
+        if self.bias_cfg.method == "augmented":
+            self._decouple_and_drift_offsets()
+
+    def _decouple_and_drift_offsets(self) -> None:
+        """Drop the storage–offset cross-covariance, keep the offset variance, then add random-walk drift.
+
+        An update leaves storage and offset anti-correlated. The soil dynamics then
+        contract the storage spread (drainage to field capacity, ET near wilting
+        point) while the offsets keep theirs, so the stale anti-correlation can flip
+        the sign of the storage gain at the next reading. Each forecast step
+        therefore projects the offset perturbations orthogonal to the storage
+        perturbations and rescales them to their previous variance (a decoupled,
+        two-stage bias filter). Everything is deterministic: no random draws.
+        """
+        w = self.weights
+        b_mean = float(np.sum(w * self.bias_m3m3))
+        db = self.bias_m3m3 - b_mean
+        var_b = float(np.sum(w * db ** 2))
+        ds = self.storage_mm - float(np.sum(w * self.storage_mm))
+        var_s = float(np.sum(w * ds ** 2))
+        if var_b > 0 and var_s > VARIANCE_EPS_MM2:
+            projected = db - (float(np.sum(w * db * ds)) / var_s) * ds
+            var_p = float(np.sum(w * projected ** 2))
+            if var_p > 0:
+                db = projected * np.sqrt(var_b / var_p)
+        drift = self.bias_cfg.drift_std_m3m3
+        if var_b > 0 and drift > 0:
+            db = db * np.sqrt(1.0 + drift ** 2 / var_b)
+        self.bias_m3m3 = b_mean + db
 
     # -- correction ------------------------------------------------------------
     def correct(self, theta_measured: float, sensor_std_m3m3: float, inflation: float = 1.0, gate_sigma: float | None = None) -> dict:
-        """Kalman-style ensemble correction with an innovation (outlier) gate."""
+        """Kalman-style ensemble correction with an innovation (outlier) gate and sensor-bias handling."""
         if not np.isfinite(theta_measured) or sensor_std_m3m3 < 0 or inflation < 1:
             raise ValueError("Invalid measurement or sensor variance")
-        z_mm = theta_measured * self.root_depth_m * 1000
-        r = (sensor_std_m3m3 * self.root_depth_m * 1000) ** 2 * inflation
+        zscale = self.root_depth_m * 1000
+        z_mm = theta_measured * zscale
+        r = (sensor_std_m3m3 * zscale) ** 2 * inflation
         w = self.weights
+        method = self.bias_cfg.method
         mean = float(np.sum(w * self.storage_mm))
         p = float(np.sum(w * (self.storage_mm - mean) ** 2))
         if p < VARIANCE_EPS_MM2:  # collapsed ensemble: treat float residue as exactly zero
             p = 0.0
-        innovation = z_mm - mean
-        diag = {"prior_mean_mm": mean, "prior_var_mm2": p, "measurement_mm": z_mm, "sensor_var_mm2": r, "innovation_mm": innovation}
-        if gate_sigma is not None and (p + r) > 0 and abs(innovation) > gate_sigma * np.sqrt(p + r):
+        b_mean = float(np.sum(w * self.bias_m3m3))
+        y = self.storage_mm + self.bias_m3m3 * zscale            # predicted reading per member (mm)
+        y_mean = float(np.sum(w * y))
+        p_yy = float(np.sum(w * (y - y_mean) ** 2))
+        if p_yy < VARIANCE_EPS_MM2:
+            p_yy = 0.0
+        innovation = z_mm - y_mean
+        diag = {"prior_mean_mm": mean, "prior_var_mm2": p, "measurement_mm": z_mm, "sensor_var_mm2": r, "innovation_mm": innovation,
+                "bias_method": method, "prior_bias_m3m3": b_mean}
+        nu = innovation / np.sqrt(p_yy + r) if (p_yy + r) > 0 else 0.0
+        diag["normalized_innovation"] = float(nu)
+        if gate_sigma is not None and (p_yy + r) > 0 and abs(nu) > gate_sigma:
             diag.update({"applied": False, "reason": f"innovation exceeds {gate_sigma:g}σ outlier gate", "gain": 0.0,
-                         "posterior_mean_mm": mean, "posterior_var_mm2": p, "clipped_members": 0})
+                         "posterior_mean_mm": mean, "posterior_var_mm2": p, "clipped_members": 0, "posterior_bias_m3m3": b_mean})
             return diag
-        denominator = p + r
-        gain = p / denominator if denominator > 0 else 0.0
+        if method == "innovation_monitor":
+            k_slack, h = self.bias_cfg.monitor_k, self.bias_cfg.monitor_h
+            flagged_pos, flagged_neg = self.cusum_pos > h, self.cusum_neg > h  # alarm state before this reading
+            self.cusum_pos = max(0.0, self.cusum_pos + nu - k_slack)
+            self.cusum_neg = max(0.0, self.cusum_neg - nu - k_slack)
+            if (flagged_pos and innovation > 0) or (flagged_neg and innovation < 0):
+                r *= self.bias_cfg.monitor_downweight
+                diag["downweighted"] = True
+            diag.update({"cusum_pos": self.cusum_pos, "cusum_neg": self.cusum_neg,
+                         "bias_suspected": bool(self.cusum_pos > h or self.cusum_neg > h)})
+        denominator = p_yy + r
+        if method != "augmented":  # y == storage, so C_sy == P: keep the original arithmetic exactly
+            c_sy, gain_b, alpha = p, 0.0, 0.0
+            gain = p / denominator if denominator > 0 else 0.0
+        elif denominator > 0:
+            c_sy = float(np.sum(w * (self.storage_mm - mean) * (y - y_mean)))
+            c_by = float(np.sum(w * (self.bias_m3m3 - b_mean) * (y - y_mean)))
+            gain, gain_b = c_sy / denominator, c_by / denominator
+            alpha = 1.0 / (1.0 + np.sqrt(r / denominator))
+        else:
+            c_sy, gain, gain_b, alpha = 0.0, 0.0, 0.0, 0.0
         new_mean = mean + gain * innovation
-        shrink = np.sqrt(max(0.0, 1.0 - gain))
-        updated = new_mean + shrink * (self.storage_mm - mean)
-        z = self.root_depth_m * 1000
-        low, high = self.theta_wp * z, self.theta_sat * z
+        if method == "augmented":
+            updated = new_mean + (self.storage_mm - mean) - alpha * gain * (y - y_mean)
+            self.bias_m3m3 = (b_mean + gain_b * innovation) + (self.bias_m3m3 - b_mean) - alpha * gain_b * (y - y_mean)
+        else:  # identical arithmetic to the original update (bias members are all zero)
+            updated = new_mean + np.sqrt(max(0.0, 1.0 - gain)) * (self.storage_mm - mean)
+        low, high = self.theta_wp * zscale, self.theta_sat * zscale
         clipped = int(np.sum((updated < low) | (updated > high)))
         self.storage_mm = np.clip(updated, low, high)
         self.last_observation_day = self.day
         post_mean = float(np.sum(w * self.storage_mm))
         post_var = float(np.sum(w * (self.storage_mm - post_mean) ** 2))
-        diag.update({"applied": True, "reason": "kalman ensemble update", "gain": gain, "posterior_mean_mm": post_mean,
-                     "posterior_var_mm2": post_var, "analytic_posterior_var_mm2": (1 - gain) * p, "clipped_members": clipped})
+        diag.update({"applied": True, "reason": "kalman ensemble update" if method != "augmented" else "joint soil + sensor-offset update",
+                     "gain": gain, "posterior_mean_mm": post_mean, "posterior_var_mm2": post_var,
+                     "analytic_posterior_var_mm2": (1 - gain) * p if method != "augmented" else p - gain * c_sy, "clipped_members": clipped,
+                     "posterior_bias_m3m3": float(np.sum(w * self.bias_m3m3))})
         return diag
+
+    def bias_state(self) -> dict:
+        """Current belief about the sensor offset (for diagnostics and the UI)."""
+        w = self.weights
+        b_mean = float(np.sum(w * self.bias_m3m3))
+        out = {"method": self.bias_cfg.method, "mean_m3m3": b_mean,
+               "std_m3m3": float(np.sqrt(max(0.0, np.sum(w * (self.bias_m3m3 - b_mean) ** 2))))}
+        if self.bias_cfg.method == "innovation_monitor":
+            out.update({"cusum_pos": self.cusum_pos, "cusum_neg": self.cusum_neg,
+                        "bias_suspected": bool(max(self.cusum_pos, self.cusum_neg) > self.bias_cfg.monitor_h)})
+        return out
+
+    def effective_sensor_std(self, sensor_std_m3m3: float) -> float:
+        """Sensor std seen by the soil state once offset uncertainty is included (used by VOI)."""
+        w = self.weights
+        b_mean = float(np.sum(w * self.bias_m3m3))
+        var_b = float(np.sum(w * (self.bias_m3m3 - b_mean) ** 2))
+        return float(sensor_std_m3m3) if var_b <= 0 else float(np.sqrt(sensor_std_m3m3 ** 2 + var_b))
 
     # -- read-only views ---------------------------------------------------------
     def members(self) -> MemberState:

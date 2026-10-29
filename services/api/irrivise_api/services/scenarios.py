@@ -8,14 +8,16 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from irrivise_core.config import load_carat, load_crop, load_soil
-from irrivise_core.config.schemas import (CaratConfig, RewardWeights, RiskConfig, ScenarioConfig, SensorConfig, UncertaintyConfig)
+from irrivise_core.config.schemas import (CaratConfig, RewardWeights, RiskConfig, ScenarioConfig, SensorConfig, TwinBiasConfig,
+                                            UncertaintyConfig)
 from irrivise_core.util.repro import sha256_json
 
 from ..db.models import Project, Scenario, new_id
 from ..errors import ApiError, not_found
 from . import datasets
 
-ADVANCED_SECTIONS = {"carat": CaratConfig, "risk": RiskConfig, "reward": RewardWeights, "uncertainty": UncertaintyConfig}
+ADVANCED_SECTIONS = {"carat": CaratConfig, "risk": RiskConfig, "reward": RewardWeights, "uncertainty": UncertaintyConfig,
+                    "twin_bias": TwinBiasConfig}
 
 
 def build_config(s: Scenario) -> ScenarioConfig:

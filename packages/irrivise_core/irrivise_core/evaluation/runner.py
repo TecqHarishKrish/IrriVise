@@ -87,7 +87,7 @@ def run_episode(scenario: ScenarioConfig, season: Season, forecaster: Climatolog
         assessment = None
         if need_assessment:
             assessment = carat.assess(members, forecast, day, world.remaining_water_mm, world.sensor.remaining,
-                                      world.sensor.is_available(day), scenario.sensor.noise_std_m3m3, voi_rng,
+                                      world.sensor.is_available(day), world.twin.effective_sensor_std(scenario.sensor.noise_std_m3m3), voi_rng,
                                       policy_action_mm=initial, compute_voi=obs_policy.needs_voi)
         if initial is None:
             initial = assessment.belief_action_mm
@@ -100,7 +100,7 @@ def run_episode(scenario: ScenarioConfig, season: Season, forecaster: Climatolog
                 final_view, final_members = world.view(forecast), world.members()
                 if need_assessment:
                     after = carat.assess(final_members, forecast, day, world.remaining_water_mm, world.sensor.remaining,
-                                         world.sensor.is_available(day), scenario.sensor.noise_std_m3m3, voi_rng,
+                                         world.sensor.is_available(day), world.twin.effective_sensor_std(scenario.sensor.noise_std_m3m3), voi_rng,
                                          policy_action_mm=None, compute_voi=False)
                 proposed = irrigation.propose(final_view) if irrigation is not None else after.belief_action_mm
         decision = risk.project(proposed, final_members, forecast, day, world.remaining_water_mm)

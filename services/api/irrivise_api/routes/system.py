@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from irrivise_core.baselines.policies import METHODS
 from irrivise_core.config import ACTIONS_MM, list_profiles, load_carat, load_crop, load_soil, load_training
-from irrivise_core.config.schemas import RewardWeights, RiskConfig, SensorConfig, UncertaintyConfig
+from irrivise_core.config.schemas import RewardWeights, RiskConfig, SensorConfig, TwinBiasConfig, UncertaintyConfig
 from irrivise_core.crops import aquacrop_adapter
 from irrivise_core.envs.features import FEATURE_SPEC_VERSION, FEATURES
 from irrivise_core.util.repro import package_versions
@@ -51,7 +51,7 @@ def defaults():
     presets = {name: load_training(name).model_dump(mode="json") for name in list_profiles("training")}
     return {"actions_mm": list(ACTIONS_MM), "crops": crops, "soils": soils, "training_presets": presets,
             "carat": load_carat("default").model_dump(mode="json"), "risk": RiskConfig().model_dump(), "reward": RewardWeights().model_dump(),
-            "uncertainty": UncertaintyConfig().model_dump(), "sensor": SensorConfig().model_dump(), "sensor_modes": ["nominal", "missing", "biased", "stuck", "delayed"],
+            "uncertainty": UncertaintyConfig().model_dump(), "twin_bias": TwinBiasConfig().model_dump(), "sensor": SensorConfig().model_dump(), "sensor_modes": ["nominal", "missing", "biased", "stuck", "delayed"],
             "methods": [m.as_dict() for m in METHODS.values()], "feature_spec_version": FEATURE_SPEC_VERSION,
             "policy_features": [{"name": n, "description": d} for n, d in FEATURES],
             "units": {"irrigation": "mm/day", "seasonal_water": "mm", "soil_water_storage": "mm (root zone)", "theta": "m³/m³",

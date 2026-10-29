@@ -1,0 +1,17 @@
+# Sensor-fault re-run (missing) with the twin's sensor-bias handling (twin_bias defaults: augmented,
+# prior 0.015, drift 0.003 m³/m³/day). Compare with docs/results/sensor_faults.md, which was
+# produced before bias handling existed (equivalent to scenario: {twin_bias: {method: none}}).
+# Requires a trained PPO checkpoint: scripts/train_ppo.py --preset cpu_standard --dataset sample
+name: Sensor fault (missing), twin bias handling on
+dataset: data/sample/synthetic_weather_tn_v1.csv
+split: test
+methods: [ppo, ppo_fixed_interval, ppo_carat_no_correction, carat_full]
+reference_method: ppo_fixed_interval
+seeds: [1, 2, 3]
+observation_budgets: [10]
+sensor_noise_m3m3: [0.02]
+sensor_mode: missing
+uncertainty_threshold: 0.06   # tuned on validation seasons
+aquacrop: false
+scenario: {carat: {observation_cost: 0.0}}
+max_runs: 200
